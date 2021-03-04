@@ -1,5 +1,5 @@
 package com.techelevator.tenmo.JDBC;
 
-public interface JDBCAccountDAO {
+public class JDBCAccountDAO {
 
 }

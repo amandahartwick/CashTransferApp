@@ -1,5 +1,15 @@
 package com.techelevator.tenmo.DAO;
 
-public class AccountDAO {
+import java.awt.List;
+
+public interface AccountDAO {
+	
+	public void create();
+	
+	public void delete();
+	
+	public List<Account> searchAccountsByUserId(int UserId);
+	
+	
 
 }
