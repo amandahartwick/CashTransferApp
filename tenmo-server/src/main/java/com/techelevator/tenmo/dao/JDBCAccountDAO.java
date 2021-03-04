@@ -32,10 +32,7 @@ public class JDBCAccountDAO implements AccountDAO {
 		return allAccounts;
 	}
 
-	public List<Account> viewTransferHistory(int accountId) {
-		//account_id --> transfers table,  WHERE account_to OR account_from = account_id, We want transfer_id
-		return null;
-	}
+
 
 	@Override
 	public BigDecimal viewCurrentBalance(int accountId) {
@@ -45,7 +42,7 @@ public class JDBCAccountDAO implements AccountDAO {
 
 	@Override
 	public int viewPendingRequests(int accountId) {
-		// account_id --> transfers table, WHERE 
+		// Selecting status from transfer status where transfer key account_id --> transfers table, 
 		return 0;
 	}
 
