@@ -1,9 +1,11 @@
 package com.techelevator.tenmo.dao;
 
-public interface TransferDAO {
-	public void sendBucks();
+import java.math.BigDecimal;
 
-	public void requestBucks();
+public interface TransferDAO {
+	public void sendBucks(int account_id, BigDecimal request, int accountId2);
+
+	public void requestBucks(int account_id, BigDecimal request, int accountId2);
 
 		
 }
