@@ -6,9 +6,11 @@ import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Component;
 
 import com.techelevator.tenmo.model.Account;
 
+@Component
 public class JDBCAccountDAO implements AccountDAO {
 
 	private JdbcTemplate jdbcTemplate;
@@ -20,7 +22,7 @@ public class JDBCAccountDAO implements AccountDAO {
 	@Override
 	public List<Account> getAccountByAccountId(int accountId) {
 		List<Account> allAccounts = new ArrayList<>();
-		String sqlGetAccountById = "SELECT *, FROM accounts, WWHERE account_id = ?";
+		String sqlGetAccountById = "SELECT *, FROM accounts, WHERE account_id = ?";
 
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAccountById);
 		while (results.next()) {
@@ -31,19 +33,19 @@ public class JDBCAccountDAO implements AccountDAO {
 	}
 
 	public List<Account> viewTransferHistory(int accountId) {
-
+		//account_id --> transfers table,  WHERE account_to OR account_from = account_id, We want transfer_id
 		return null;
 	}
 
 	@Override
 	public BigDecimal viewCurrentBalance(int accountId) {
-		// TODO Auto-generated method stub
+		//Select balance from accounts where account_id = ?
 		return null;
 	}
 
 	@Override
 	public int viewPendingRequests(int accountId) {
-		// TODO Auto-generated method stub
+		// account_id --> transfers table, WHERE 
 		return 0;
 	}
 

@@ -1,5 +1,7 @@
 package com.techelevator.tenmo.dao;
 
+import java.math.BigDecimal;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -14,14 +16,19 @@ public class JDBCTransferDAO implements TransferDAO {
 	}
 
 	@Override
-	public void sendBucks() {
-		// TODO Auto-generated method stub
-		
+	public void sendBucks(int account_id, BigDecimal request, int accountId2) {
+		//Get balance
+		//Set balance as variable
+		//balance - request
+		//Decide if it's valid
+		//Throw exception if not
+		//Create transfer? And transfer_type and transfer_status
+		//Update balance
 	}
 
 	@Override
-	public void requestBucks() {
-		// TODO Auto-generated method stub
+	public void requestBucks(int account_id, BigDecimal request, int accountId2) {
+		//
 		
 	}
 	
@@ -39,5 +46,7 @@ public class JDBCTransferDAO implements TransferDAO {
 
 		return theTransfer;
 	}
+
+
 
 }
