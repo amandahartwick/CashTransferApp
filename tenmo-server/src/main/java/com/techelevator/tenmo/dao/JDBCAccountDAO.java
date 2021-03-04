@@ -22,9 +22,9 @@ public class JDBCAccountDAO implements AccountDAO {
 	@Override
 	public List<Account> getAccountByAccountId(int accountId) {
 		List<Account> allAccounts = new ArrayList<>();
-		String sqlGetAccountById = "SELECT *, FROM accounts, WHERE account_id = ?";
+		String sqlGetAccountById = "SELECT balance, account_id, user_id,, FROM accounts, WHERE account_id = ?";
 
-		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAccountById);
+		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAccountById, accountId);
 		while (results.next()) {
 			Account accountResult = mapRowToAccount(results);
 			allAccounts.add(accountResult);
@@ -32,21 +32,16 @@ public class JDBCAccountDAO implements AccountDAO {
 		return allAccounts;
 	}
 
-	public List<Account> viewTransferHistory(int accountId) {
-		//account_id --> transfers table,  WHERE account_to OR account_from = account_id, We want transfer_id
-		return null;
-	}
-
 	@Override
 	public BigDecimal viewCurrentBalance(int accountId) {
-		//Select balance from accounts where account_id = ?
-		return null;
-	}
-
-	@Override
-	public int viewPendingRequests(int accountId) {
-		// account_id --> transfers table, WHERE 
-		return 0;
+		BigDecimal currentBalance = null;
+		String sqlGetcurrentBalance = "SELECT balance, account_id, user_id, FROM accounts, WHERE account_id = ?";
+		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetcurrentBalance, accountId);
+		while (results.next()) {
+			Account accountResult = mapRowToAccount(results);
+			currentBalance = accountResult.getBalance();
+		}
+		return currentBalance;
 	}
 
 	private Account mapRowToAccount(SqlRowSet result) {
