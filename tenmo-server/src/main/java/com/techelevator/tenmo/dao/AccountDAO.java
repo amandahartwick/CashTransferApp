@@ -8,12 +8,6 @@ import com.techelevator.tenmo.model.Account;
 public interface AccountDAO {
 	
 	public List<Account> getAccountByAccountId(int accountId);
-	
-	public List<Account> viewTransferHistory(int accountId);
 
 	public BigDecimal viewCurrentBalance(int accountId);
-	
-	public int viewPendingRequests(int accountId);
-	
-	
 }

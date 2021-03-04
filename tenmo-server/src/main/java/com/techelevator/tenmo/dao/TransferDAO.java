@@ -8,6 +8,8 @@ public interface TransferDAO {
 
 	public void requestBucks(int account_id, BigDecimal request, int accountId2);
 	
+	public List<Transfer> viewTransferHistory(int accountId);
+	
 	public List<Transfer> viewPendingRequests(int accountId);
 
 		
