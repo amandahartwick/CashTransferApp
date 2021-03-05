@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.techelevator.tenmo.dao.AccountDAO;
-import com.techelevator.tenmo.dao.TransferDAO;
-import com.techelevator.tenmo.dao.UserDAO;
+//import com.techelevator.tenmo.dao.TransferDAO;
+//import com.techelevator.tenmo.dao.UserDAO;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.security.jwt.TokenProvider;
 
@@ -22,16 +22,16 @@ import com.techelevator.tenmo.security.jwt.TokenProvider;
 
 public class UserController {
 
-	private final TokenProvider tokenProvider;
-	private TransferDAO tDAO;
+	//private final TokenProvider tokenProvider;
+	//private TransferDAO tDAO;
 	private AccountDAO aDAO;
-	private UserDAO uDAO;
+	//private UserDAO uDAO;
 
-	public UserController(TokenProvider tokenProvider, TransferDAO tdao, AccountDAO aDAO) {
-		this.tokenProvider = tokenProvider;
-		this.tDAO = tDAO;
+	public UserController(AccountDAO aDAO) {		//TokenProvider tokenProvider TransferDAO tdao,
+	//	this.tokenProvider = tokenProvider;
+	//	this.tDAO = tDAO;
 		this.aDAO = aDAO;
-		this.uDAO = uDAO;
+	//	this.uDAO = uDAO;
 	}
 	
 	/**
@@ -44,7 +44,7 @@ public class UserController {
 	@RequestMapping(value = "account/{account_id}", method = RequestMethod.GET)
 	public List<Account> findAccountByAccountId(@Valid @RequestParam(defaultValue = "0") int user_id) throws AccountNotFoundException {
 		if(user_id > 0) {
-			return aDAO.getAccountByAccountId(user_id);
+		//	return aDAO.getAccountByAccountId(user_id);
 		}
 		return aDAO.findAll();
 	}
@@ -56,12 +56,12 @@ public class UserController {
 	 * @param transfer_id --  the transfer id to be searched for
 	 */
 
-	@PreAuthorize ("hasAnyRole('ADMIN', 'CREATOR')")
-	@RequestMapping(value = "account/transfer/{transfer_id}", method = RequestMethod.GET)
-	public List<Account> list(@Valid @RequestParam(defaultValue = "0") int user_id) {
-		if(user_id > 0) {
-			return aDAO.getAccountByAccountId(user_id);
-		}
-		System.out.println("Please enter a valid user id.");
-	}
+//	@PreAuthorize ("hasAnyRole('ADMIN', 'CREATOR')")
+//	@RequestMapping(value = "account/transfer/{transfer_id}", method = RequestMethod.GET)
+//	public List<Account> list(@Valid @RequestParam(defaultValue = "0") int user_id) {
+//		if(user_id > 0) {
+//			return aDAO.getAccountByAccountId(user_id);
+//		}
+//		System.out.println("Please enter a valid user id.");
+//	}
 }

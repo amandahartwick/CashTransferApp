@@ -4,13 +4,14 @@ import java.math.BigDecimal;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 
 public class Account {
 	private int accountId;
 	@NotBlank(message = "The field `accountId` should not be blank.")
 	private int userId;
-	@Positive( value = "1.0", message = "The field `balance` should be greater than 0.")
-	private BigDecimal balance;
+	//@Positive(@Value = "1.0", message = "The field `balance` should be greater than 0.")
+	private double balance;
 	
 	
 	public int getAccountId() {
@@ -25,10 +26,10 @@ public class Account {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	public BigDecimal getBalance() {
+	public double getBalance() {
 		return balance;
 	}
-	public void setBalance(BigDecimal balance) {
+	public void setBalance(double balance) {
 		this.balance = balance;
 	}
 }

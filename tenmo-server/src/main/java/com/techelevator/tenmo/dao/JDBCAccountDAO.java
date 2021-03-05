@@ -1,9 +1,7 @@
 package com.techelevator.tenmo.dao;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -34,15 +32,14 @@ public class JDBCAccountDAO implements AccountDAO {
 
 	// find account by account_id
 	@Override
-	public List<Account> getAccountByAccountId(int accountId) {
-		List<Account> allAccounts = new ArrayList<>();
+	public Account getAccountByAccountId(int accountId) {
+		Account theAccount = new Account(); 
 		String sqlGetAccountById = "SELECT balance, account_id, user_id FROM accounts WHERE account_id = ?";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAccountById, accountId);
-		while (results.next()) {
-			Account accountResult = mapRowToAccount(results);
-			allAccounts.add(accountResult);
+		while(results.next()) {
+			theAccount = mapRowToAccount(results);
 		}
-		return allAccounts;
+		return theAccount;
 	}
 
 	// find account by user_id
@@ -60,8 +57,8 @@ public class JDBCAccountDAO implements AccountDAO {
 
 	// find balance based on account_id
 	@Override
-	public BigDecimal getBalance(int accountId) {
-		BigDecimal currentBalance = null;
+	public double getBalance(int accountId) {
+		double currentBalance = 0.0;
 		String sqlGetcurrentBalance = "SELECT balance, account_id, user_id FROM accounts WHERE account_id = ?";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetcurrentBalance, accountId);
 		while (results.next()) {

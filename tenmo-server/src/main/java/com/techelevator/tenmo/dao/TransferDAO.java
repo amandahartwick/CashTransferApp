@@ -6,9 +6,9 @@ import java.util.List;
 import com.techelevator.tenmo.model.Transfer;
 
 public interface TransferDAO {
-	public void sendBucks(int account_id, BigDecimal request, int accountId2);
+	public void sendBucks(int accountId_from, double request, int accountId_to);
 
-	public void requestBucks(int account_id, BigDecimal request, int accountId2);
+	public void requestBucks(int accountId_from, double request, int accountId_to);
 	
 	public List<Transfer> viewTransferHistory(int accountId);
 	
