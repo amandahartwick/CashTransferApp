@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class UserSqlDAO implements UserDAO {
+public abstract class UserSqlDAO implements UserDAO {
 
     private static final double STARTING_BALANCE = 1000;
     private JdbcTemplate jdbcTemplate;
@@ -77,14 +77,29 @@ public class UserSqlDAO implements UserDAO {
 
         return userCreated && accountCreated;
     }
+    
+    // finds user_name from user_id
+	@Override
+	public String findUsernameByUserId(int user_id) {
+		String username = "";
 
-    private User mapRowToUser(SqlRowSet rs) {
-        User user = new User();
-        user.setId(rs.getLong("user_id"));
-        user.setUsername(rs.getString("username"));
-        user.setPassword(rs.getString("password_hash"));
-        user.setActivated(true);
-        user.setAuthorities("ROLE_USER");
-        return user;
-    }
+		String sql = "SELECT * FROM users WHERE user_id IS ?";
+		 SqlRowSet results = jdbcTemplate.queryForRowSet(sql, user_id);
+		 
+	        while(results.next()) {
+	        	User userResults = mapRowToUser(results);
+	        	username = userResults.getUsername();
+	        }
+		
+		return username;
+	}
+	 private User mapRowToUser(SqlRowSet rs) {
+	        User user = new User();
+	        user.setId(rs.getLong("user_id"));
+	        user.setUsername(rs.getString("username"));
+	        user.setPassword(rs.getString("password_hash"));
+	        user.setActivated(true);
+	        user.setAuthorities("ROLE_USER");
+	        return user;
+	    }
 }

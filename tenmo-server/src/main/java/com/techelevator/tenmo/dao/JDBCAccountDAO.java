@@ -19,11 +19,24 @@ public class JDBCAccountDAO implements AccountDAO {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
+	// return all accounts
+	@Override
+	public List<Account> findAll() {
+			List<Account> allAccounts = new ArrayList<>();
+			String sqlGetAccountById = "SELECT balance, account_id, user_id FROM accounts";
+			SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAccountById);
+			while (results.next()) {
+				Account accountResult = mapRowToAccount(results);
+				allAccounts.add(accountResult);
+			}
+			return allAccounts;
+	}
+
+	// find account by account_id
 	@Override
 	public List<Account> getAccountByAccountId(int accountId) {
 		List<Account> allAccounts = new ArrayList<>();
-		String sqlGetAccountById = "SELECT balance, account_id, user_id,, FROM accounts, WHERE account_id = ?";
-
+		String sqlGetAccountById = "SELECT balance, account_id, user_id FROM accounts WHERE account_id = ?";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAccountById, accountId);
 		while (results.next()) {
 			Account accountResult = mapRowToAccount(results);
@@ -32,10 +45,24 @@ public class JDBCAccountDAO implements AccountDAO {
 		return allAccounts;
 	}
 
+	// find account by user_id
 	@Override
-	public BigDecimal viewCurrentBalance(int accountId) {
+	public List<Account> getAccountByUserId(int userId) {
+		List<Account> allAccounts = new ArrayList<>();
+		String sqlGetAccountById = "SELECT balance, account_id, user_id FROM accounts WHERE user_id = ?";
+		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAccountById, userId);
+		while (results.next()) {
+			Account accountResult = mapRowToAccount(results);
+			allAccounts.add(accountResult);
+		}
+		return allAccounts;
+	}
+
+	// find balance based on account_id
+	@Override
+	public BigDecimal getBalance(int accountId) {
 		BigDecimal currentBalance = null;
-		String sqlGetcurrentBalance = "SELECT balance, account_id, user_id, FROM accounts, WHERE account_id = ?";
+		String sqlGetcurrentBalance = "SELECT balance, account_id, user_id FROM accounts WHERE account_id = ?";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetcurrentBalance, accountId);
 		while (results.next()) {
 			Account accountResult = mapRowToAccount(results);

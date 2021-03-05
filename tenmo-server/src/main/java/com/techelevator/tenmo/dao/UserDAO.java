@@ -11,6 +11,11 @@ public interface UserDAO {
     User findByUsername(String username);
 
     int findIdByUsername(String username);
+    
+    String findUsernameByUserId(int user_id);
 
     boolean create(String username, String password);
+    
+    // may not be needed ...
+    // void printAll(List<User> findAll);
 }
