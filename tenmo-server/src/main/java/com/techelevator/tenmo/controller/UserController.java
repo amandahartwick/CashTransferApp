@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.techelevator.tenmo.dao.AccountDAO;
-//import com.techelevator.tenmo.dao.TransferDAO;
+import com.techelevator.tenmo.dao.TransferDAO;
 //import com.techelevator.tenmo.dao.UserDAO;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.security.jwt.TokenProvider;
@@ -23,13 +23,13 @@ import com.techelevator.tenmo.security.jwt.TokenProvider;
 public class UserController {
 
 	//private final TokenProvider tokenProvider;
-	//private TransferDAO tDAO;
+	private TransferDAO tDAO;
 	private AccountDAO aDAO;
 	//private UserDAO uDAO;
 
-	public UserController(AccountDAO aDAO) {		//TokenProvider tokenProvider TransferDAO tdao,
+	public UserController(TransferDAO tdao, AccountDAO aDAO) {		//TokenProvider tokenProvider 
 	//	this.tokenProvider = tokenProvider;
-	//	this.tDAO = tDAO;
+		this.tDAO = tDAO;
 		this.aDAO = aDAO;
 	//	this.uDAO = uDAO;
 	}
@@ -40,7 +40,7 @@ public class UserController {
 	 * @param account_id -- the user id to be searched for
 	 */
 
-	@PreAuthorize ("permitAll())")
+	@PreAuthorize ("permitAll")
 	@RequestMapping(value = "account/{account_id}", method = RequestMethod.GET)
 	public List<Account> findAccountByAccountId(@Valid @RequestParam(defaultValue = "0") int user_id) throws AccountNotFoundException {
 		if(user_id > 0) {
