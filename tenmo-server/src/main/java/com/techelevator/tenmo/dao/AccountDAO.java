@@ -13,7 +13,7 @@ public interface AccountDAO {
 	
 	public List<Account> getAccountByUserId(int userId);
 
-	public BigDecimal getBalance(int accountId);
+	public double getBalance(int accountId);
 	
 
 	
