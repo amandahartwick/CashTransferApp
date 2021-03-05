@@ -6,18 +6,15 @@ import javax.security.auth.login.AccountNotFoundException;
 import javax.validation.Valid;
 
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.techelevator.tenmo.dao.AccountDAO;
-import com.techelevator.tenmo.dao.JDBCTransferDAO;
 import com.techelevator.tenmo.dao.TransferDAO;
 import com.techelevator.tenmo.dao.UserDAO;
 import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.security.jwt.TokenProvider;
 
 @RestController
@@ -60,21 +57,11 @@ public class UserController {
 	 */
 
 	@PreAuthorize ("hasAnyRole('ADMIN', 'CREATOR')")
-	@RequestMapping(value = "account/{user_id}", method = RequestMethod.GET)
+	@RequestMapping(value = "account/transfer/{transfer_id}", method = RequestMethod.GET)
 	public List<Account> list(@Valid @RequestParam(defaultValue = "0") int user_id) {
 		if(user_id > 0) {
 			return aDAO.getAccountByAccountId(user_id);
 		}
 		System.out.println("Please enter a valid user id.");
 	}
-}
-
-
-	
-	/*
-	 * /8080/account/{user_id} ... get ... user
-	 * /8080/transfer/{transfer_id} ... get ... user
-	 * 
-	 */
-
 }
