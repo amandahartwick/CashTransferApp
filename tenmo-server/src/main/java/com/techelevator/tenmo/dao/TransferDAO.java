@@ -11,6 +11,8 @@ public interface TransferDAO {
 	public List<Transfer> viewTransferHistory(int accountId);
 	
 	public List<Transfer> viewPendingRequests(int accountId);
-
-		
+	
+	public List<Transfer> allTransfers();
+	
+	Transfer transferDetails(int transferId);
 }
