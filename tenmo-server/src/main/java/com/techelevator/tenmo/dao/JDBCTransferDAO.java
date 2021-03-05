@@ -30,22 +30,28 @@ public class JDBCTransferDAO implements TransferDAO {
 	@Override
 	public void sendBucks(int account_id, BigDecimal request, int account_id2) {
 		BigDecimal theBalance;
-		String sqlBalance = "SELECT account_id, user_id, balance FROM accounts WHERE account_id = ?;";
+		
+		// find account by account id -- replace with getBalance() from jdbcaccountdao
+		String sqlBalance = "SELECT account_id, user_id, balance FROM accounts WHERE account_id = ?;"; // getAccount()
 		SqlRowSet balanceResult = jdbcTemplate.queryForRowSet(sqlBalance, account_id);
 		if (balanceResult.next()) {
-			theBalance = balanceResult.getBigDecimal("balance");
-			BigDecimal newBalance = theBalance.subtract(request);
+			theBalance = balanceResult.getBigDecimal("balance"); // taking out balance
+			BigDecimal newBalance = theBalance.subtract(request); // checking that there is enough balance to complete trans
 			BigDecimal zero = BigDecimal.valueOf(0.0);
-			if (newBalance.compareTo(zero) >= 0) {
+			
+			
+			if (newBalance.compareTo(zero) >= 0) { // changing balance after can be simplified
 				Long transferId = getNextTransferId();
 				String sqlTransfer = "INSERT INTO transfers (transfer_id, transfer_status_id, transfer_type_id, account_from, account_to, amount)"
-						+ "VALUES (?, 2, 2, ?, ?, ?);";
+						+ "VALUES (?, 2, 2, ?, ?, ?);"; //a okay
 				jdbcTemplate.update(sqlTransfer, transferId, account_id, account_id2, request);
-				String sqlUpdateSender = "UPDATE accounts SET balance = ? WHERE account_id = ?;";
+				String sqlUpdateSender = "UPDATE accounts SET balance = ? WHERE account_id = ?;"; // okay
 				jdbcTemplate.update(sqlUpdateSender, newBalance, account_id);
 				BigDecimal theRecieverBalance = null;
 				String sqlBalanceReciever = "SELECT account_id, user_id, balance FROM accounts WHERE account_id = ?;";
-				SqlRowSet recieverBalanceResult = jdbcTemplate.queryForRowSet(sqlBalance, account_id2);
+				SqlRowSet recieverBalanceResult = jdbcTemplate.queryForRowSet(sqlBalance, account_id2); //get balance for person sending money to --  use getbalance() again
+				
+				
 				if (recieverBalanceResult.next()) { // This will probably cause a problem
 					BigDecimal currentBalance = recieverBalanceResult.getBigDecimal("balance");
 					theRecieverBalance.add(currentBalance);
@@ -53,14 +59,12 @@ public class JDBCTransferDAO implements TransferDAO {
 					String sqlTransferToReceiver = "UPDATE accounts SET balance = ? WHERE account_id = ?;";
 					jdbcTemplate.update(sqlTransferToReceiver, theRecieverBalance, account_id2);
 				}
-
-				// Create Transfer
-				// Update both balances
 			} else {
 				throw new InsufficientFundException();
 			}
 		}
 	}
+	
 
 	@Override
 	public void requestBucks(int account_id, BigDecimal request, int accountId2) {
