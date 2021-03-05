@@ -36,15 +36,13 @@ public class JDBCTransferDAO implements TransferDAO {
 				jdbcTemplate.update(sqlTransfer, transferId, account_id, account_id2, request);
 				String sqlUpdateSender = "UPDATE accounts SET balance = ? WHERE account_id = ?;";
 				jdbcTemplate.update(sqlUpdateSender, newBalance, account_id);
-				BigDecimal theRecieverBalance = null;
 				String sqlBalanceReciever = "SELECT account_id, user_id, balance FROM accounts WHERE account_id = ?;";
-				SqlRowSet recieverBalanceResult = jdbcTemplate.queryForRowSet(sqlBalance, account_id2);
+				SqlRowSet recieverBalanceResult = jdbcTemplate.queryForRowSet(sqlBalanceReciever, account_id2);
 				if(recieverBalanceResult.next()) {  //This will probably cause a problem
 					BigDecimal currentBalance = recieverBalanceResult.getBigDecimal("balance");
-					theRecieverBalance.add(currentBalance);
-					theRecieverBalance.add(request);
+					currentBalance.add(request);
 					String sqlTransferToReceiver = "UPDATE accounts SET balance = ? WHERE account_id = ?;";
-					jdbcTemplate.update(sqlTransferToReceiver, theRecieverBalance, account_id2);					
+					jdbcTemplate.update(sqlTransferToReceiver, currentBalance, account_id2);					
 				}
 				
 				// Create Transfer

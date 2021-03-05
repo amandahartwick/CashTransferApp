@@ -2,7 +2,7 @@ package com.techelevator.tenmo.models;
 
 import java.math.BigDecimal;
 
-public class transfers {
+public class Transfer {
 	int transfer_id;
 	int transfer_type_id;
 	int transfer_status_id;
@@ -56,6 +56,10 @@ public class transfers {
 
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
+	}
+
+	public Transfer() {
+		// TODO Auto-generated constructor stub
 	}
 
 }
