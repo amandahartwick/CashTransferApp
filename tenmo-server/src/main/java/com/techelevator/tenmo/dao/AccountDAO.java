@@ -7,12 +7,14 @@ import com.techelevator.tenmo.model.Account;
 
 public interface AccountDAO {
 	
+	public List<Account> findAll();	
+	
 	public List<Account> getAccountByAccountId(int accountId);
 	
 	public List<Account> getAccountByUserId(int userId);
 
 	public BigDecimal getBalance(int accountId);
 	
-	public List<Account> findAll();	
+
 	
 }
