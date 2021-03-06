@@ -58,52 +58,12 @@ public class JDBCTransferDAO implements TransferDAO {
 		
 	}
 
-	
-//	public void sendBucksifyouradumby(int account_id, BigDecimal request, int account_id2) {
-//		BigDecimal theBalance;
-//		// find account by account id -- replace with getBalance() from jdbcaccountdao
-//		String sqlBalance = "SELECT account_id, user_id, balance FROM accounts WHERE account_id = ?;"; // getAccount()
-//		SqlRowSet balanceResult = jdbcTemplate.queryForRowSet(sqlBalance, account_id); // 1
-//		if (balanceResult.next()) {
-//			theBalance = balanceResult.getBigDecimal("balance"); // taking out balance
-//			BigDecimal newBalance = theBalance.subtract(request); // checking that there is enough balance to complete
-//																	// trans
-//			BigDecimal zero = BigDecimal.valueOf(0.0);
-//			if (newBalance.compareTo(zero) >= 0) { // changing balance after can be simplified
-//				Long transferId = getNextTransferId();
-//				String sqlTransfer = "INSERT INTO transfers (transfer_id, transfer_status_id, transfer_type_id, account_from, account_to, amount)"
-//						+ "VALUES (?, 2, 2, ?, ?, ?);"; // a okay
-//				jdbcTemplate.update(sqlTransfer, transferId, account_id, account_id2, request);
-//				String sqlUpdateSender = "UPDATE accounts SET balance = ? WHERE account_id = ?;"; // okay
-//				jdbcTemplate.update(sqlUpdateSender, newBalance, account_id);
-//				String sqlBalanceReciever = "SELECT account_id, user_id, balance FROM accounts WHERE account_id = ?;";
-//				SqlRowSet recieverBalanceResult = jdbcTemplate.queryForRowSet(sqlBalance, account_id2); // get balance
-//																										// for person
-//																										// sending money
-//																										// to -- use
-//																										// getbalance()
-//																										// again
-//				if (recieverBalanceResult.next()) { // This will probably cause a problem
-//					SqlRowSet recieverBalanceResult = jdbcTemplate.queryForRowSet(sqlBalanceReciever, account_id2);
-//					if (recieverBalanceResult.next()) { // This will probably cause a problem
-//						BigDecimal currentBalance = recieverBalanceResult.getBigDecimal("balance");
-//						currentBalance.add(request);
-//						String sqlTransferToReceiver = "UPDATE accounts SET balance = ? WHERE account_id = ?;";
-//						jdbcTemplate.update(sqlTransferToReceiver, currentBalance, account_id2);
-//					}
-//				} else {
-//					throw new InsufficientFundException();
-//				}
-//			}
-//		}
-//	}
-
-
 	// view entire transfer history of a user by account_id
+	//CHECK SQL STATEMENT
 	@Override
 	public List<Transfer> viewTransferHistory(int accountId) {
 		List<Transfer> tansferHistory = new ArrayList<>();
-		String sqlGetTransferHistory = "SELECT transfer_history, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers WHERE account_from = ?";
+		String sqlGetTransferHistory = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers WHERE account_from = ?";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetTransferHistory, accountId);
 		while (results.next()) {
 			Transfer transferResult = mapRowToTransfer(results);
@@ -113,10 +73,12 @@ public class JDBCTransferDAO implements TransferDAO {
 	}
 
 	// view all details of a single transfer_id
+	
+	//CHECK SQL STATEMENT
 	@Override
 	public Transfer transferDetails(int transferId) {
 		Transfer transferDetails = null;
-		String sqlGetTransferDetails = "SELECT transfer_history, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers WHERE transfer_id = ?";
+		String sqlGetTransferDetails = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers WHERE transfer_id = ?";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetTransferDetails, transferId);
 		while (results.next()) {
 			transferDetails = mapRowToTransfer(results);
