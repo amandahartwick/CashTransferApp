@@ -59,7 +59,7 @@ public class JDBCTransferDAO implements TransferDAO {
 	}
 
 	// view entire transfer history of a user by account_id
-	//CHECK SQL STATEMENT
+
 	@Override
 	public List<Transfer> viewTransferHistory(int accountId) {
 		List<Transfer> tansferHistory = new ArrayList<>();
@@ -74,7 +74,7 @@ public class JDBCTransferDAO implements TransferDAO {
 
 	// view all details of a single transfer_id
 	
-	//CHECK SQL STATEMENT
+
 	@Override
 	public Transfer transferDetails(int transferId) {
 		Transfer transferDetails = null;

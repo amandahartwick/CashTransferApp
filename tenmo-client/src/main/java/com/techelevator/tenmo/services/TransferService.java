@@ -31,8 +31,9 @@ public class TransferService {
 		return transfers;
 	}
 	
-	public BigDecimal sendBucks(int user_id, BigDecimal gift, int receiver_id) {
-		
+	public double sendBucks(int user_id, double transferAmount, int receiver_id) {
+		double newBalance = 0.0;
+		return newBalance;
 		//user_id
 		//amount to send
 	}
