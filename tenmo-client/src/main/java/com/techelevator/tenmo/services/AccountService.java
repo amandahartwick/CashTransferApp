@@ -1,5 +1,5 @@
 package com.techelevator.tenmo.services;
-import java.math.BigDecimal;
+
 
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -26,7 +26,7 @@ public class AccountService {
 		
 	}
 	
-	public BigDecimal viewCurrentBalance(int accountId) {
+	public double viewCurrentBalance(int accountId) {
 		Account account = null;
 		try {
 			account = restTemplate.getForObject(API_ACCOUNT_URL + "/" + accountId + "/balance", Account.class);
