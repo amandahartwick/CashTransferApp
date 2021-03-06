@@ -29,11 +29,12 @@ public class JDBCTransferDAO implements TransferDAO {
 	 * elsewhere ^
 	 */
 	@Override
-	public void sendBucks(int fromUserID, double request, int toUserID) {
+	public boolean sendBucks(int fromUserID, double request, int toUserID) {
 		//Logic
+		boolean success = false;
 		Account sender = aDAO.getAccountByUserId(fromUserID);
 		Account reciever = aDAO.getAccountByUserId(toUserID);
-		if(sender.getBalance() >= request) {
+		if(sender.getBalance() >= request && sender != reciever && request > 0) {
 			double senderBalance = sender.getBalance() - request;
 			sender.setBalance(senderBalance);
 			double receiverBalance = reciever.getBalance() + request;
@@ -48,20 +49,24 @@ public class JDBCTransferDAO implements TransferDAO {
 			jdbcTemplate.update(sqlUpdateSender, sender.getBalance(), sender.getAccountId());
 			String sqlUpdateReciever = "UPDATE accounts SET balance = ? WHERE account_id = ?;";
 			jdbcTemplate.update(sqlUpdateReciever, reciever.getBalance(), reciever.getAccountId());
+			success = true;
+			System.out.println("Transaction Successful");
 			
 		} else {
 			System.out.println("Insufficient Funds");
 			//throw new InsufficientFundException();
 		}
-		
+		return success;
 	}
 
 	// view entire transfer history of a user by account_id
-	//CHECK SQL STATEMENT
+
 	@Override
 	public List<Transfer> viewTransferHistory(int accountId) {
 		List<Transfer> tansferHistory = new ArrayList<>();
+
 		String sqlGetTransferHistory = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers WHERE account_from = ?";
+
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetTransferHistory, accountId);
 		while (results.next()) {
 			Transfer transferResult = mapRowToTransfer(results);
@@ -72,7 +77,7 @@ public class JDBCTransferDAO implements TransferDAO {
 
 	// view all details of a single transfer_id
 	
-	//CHECK SQL STATEMENT
+
 	@Override
 	public Transfer transferDetails(int transferId) {
 		Transfer transferDetails = null;
