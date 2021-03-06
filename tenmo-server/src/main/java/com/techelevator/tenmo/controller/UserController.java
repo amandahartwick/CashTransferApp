@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,11 +20,14 @@ import com.techelevator.tenmo.dao.AccountDAO;
 import com.techelevator.tenmo.dao.TransferDAO;
 import com.techelevator.tenmo.dao.UserDAO;
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.RegisterUserDTO;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
+import com.techelevator.tenmo.model.UserAlreadyExistsException;
 import com.techelevator.tenmo.security.jwt.TokenProvider;
 
 @RestController
+@RequestMapping("/api/v1")
 
 public class UserController {
 
@@ -40,61 +44,93 @@ public class UserController {
 	}
 	
 	 // *****************
-	 // *     USER      *
+	 // *   /REGISTER   *
 	 // *****************
 	
 	/*
-	 * Look up user account.
-	 * 
-	 * @Param username
-	 * @Param password
+	 * Register new user account.
 	 */
-	@ResponseStatus(HttpStatus.CREATED)
-	@RequestMapping(path = "/user", method = RequestMethod.POST)
-	public boolean findAccountWithUserId(@RequestBody Account account, @RequestParam String username, @RequestParam String password) {
-		return uDAO.create(username, password);
+
+	@RequestMapping(path = "/register", method = RequestMethod.POST)
+	public void findAccountWithUserId (@RequestBody RegisterUserDTO newUser) {
+		try { uDAO.findByUsername(newUser.getUsername());
+			throw new UserAlreadyExistsException();
+		} catch (UsernameNotFoundException notFoundExeption) {
+			uDAO.create(newUser.getUsername(), newUser.getPassword());
+		}
 	}
 	
-	/*
-	 * Look up user account.
-	 * 
-	 * @Param user_id
-	 */
-	@RequestMapping(path = "/{user_id}", method = RequestMethod.GET)
-	public Account findAccountWithUserId(@PathVariable int user_id) {
-		return aDAO.getAccountByAccountId(user_id);
-	}
+
+	 // *****************
+	 // *   /USERS      *
+	 // *****************
 
 	/*
 	 * Look up all accounts.
 	 */
-	@RequestMapping(path = "/user", method = RequestMethod.GET)
-	public List<Account> findAllAccounts() {
-		return aDAO.findAll();
-	}
-	
-	// findAccountbyid
-	
-	 // *****************
-	 // *    TRANSFER   *
-	 // *****************
-	
-	/*
-	 * Look up transfer history.
-	 * 
-	 * @Param account_id
-	 */
-	@RequestMapping(path = "{user_id}/transfer", method = RequestMethod.GET)
-	public List<Transfer> findTransferHistory(@PathVariable int user_id) {
-		return tDAO.viewTransferHistory(user_id);
-		
-		//user id and account id are different so this isnot working
+	@RequestMapping(path = "/users", method = RequestMethod.GET)
+	public List<User> findAllUsers() {
+		return uDAO.findAll();
 	}
 
 	 // *****************
-	 // *    ACCOUNT    *
+	 // *   /ACCOUNT    *
 	 // *****************
-	 
+
+	/*
+	 * Look up all accounts.
+	 */
+	@RequestMapping(path = "/accounts", method = RequestMethod.GET)
+	public List<Account> findAllAccounts() {
+		return aDAO.findAll();
+	}
+
+	/*
+	 * Look up account details.
+	 * 
+	 * @Param account_id
+	 */
+	@RequestMapping(path = "/accounts/{account_id}", method = RequestMethod.GET)
+	public Account findAccountWithAccountId(@PathVariable int account_id) {
+		return aDAO.getAccountByAccountId(account_id);
+	}
+	
+	/*
+	 * Look up user transfer history.
+	 * 
+	 * @Param account_id
+	 */
+	@RequestMapping(path = "/accounts/{account_id}/transfers", method = RequestMethod.GET)
+	public List<Transfer> accountTransferHistory(@PathVariable int account_id) {
+		return tDAO.viewTransferHistory(account_id);
+	}
+	
+	 // *****************
+	 // *   /TRANSFER   *
+	 // *****************
+	
+	/*
+	 * Send money.
+	 * 
+	 * @Param accountId_from -- account sending money
+	 * @Param request -- amount to send
+	 * @Param accountId_to -- account to send money to
+	 */
+	@RequestMapping(path = "/transfers", method = RequestMethod.POST)
+	public void sendMoney (@RequestBody Transfer transfer, int accountId_from, double request, int accountId_to) {
+		tDAO.sendBucks(accountId_from, accountId_from, accountId_to);
+	}
+	
+	/*
+	 * Look up transfer details.
+	 * 
+	 * @Param transfer_id
+	 */
+	@RequestMapping(path = "/transfers/{transfer_id}", method = RequestMethod.GET)
+	public Transfer tansferDetails (@PathVariable int transfer_id) {
+		return tDAO.transferDetails(transfer_id);
+	}
+
 
 	
 	}

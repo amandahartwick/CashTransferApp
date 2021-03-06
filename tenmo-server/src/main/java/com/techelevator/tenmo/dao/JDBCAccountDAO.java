@@ -44,13 +44,12 @@ public class JDBCAccountDAO implements AccountDAO {
 
 	// find account by user_id
 	@Override
-	public List<Account> getAccountByUserId(int userId) {
-		List<Account> allAccounts = new ArrayList<>();
+	public Account getAccountByUserId(int userId) {
+		Account allAccounts = null;
 		String sqlGetAccountById = "SELECT balance, account_id, user_id FROM accounts WHERE user_id = ?";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAccountById, userId);
 		while (results.next()) {
-			Account accountResult = mapRowToAccount(results);
-			allAccounts.add(accountResult);
+			allAccounts = mapRowToAccount(results);
 		}
 		return allAccounts;
 	}
