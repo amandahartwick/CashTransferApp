@@ -5,12 +5,14 @@ import java.util.List;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.validation.Valid;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.techelevator.tenmo.dao.AccountDAO;
@@ -43,6 +45,18 @@ public class UserController {
 	/*
 	 * Look up user account.
 	 * 
+	 * @Param username
+	 * @Param password
+	 */
+	@ResponseStatus(HttpStatus.CREATED)
+	@RequestMapping(path = "/user", method = RequestMethod.POST)
+	public boolean findAccountWithUserId(@RequestBody Account account) {
+		return uDAO.create();
+	}
+	
+	/*
+	 * Look up user account.
+	 * 
 	 * @Param user_id
 	 */
 	@RequestMapping(path = "/user/{user_id}", method = RequestMethod.GET)
@@ -50,17 +64,7 @@ public class UserController {
 		return aDAO.getAccountByAccountId(user_id);
 	}
 
-	/*
-	 * Look up user account.
-	 * 
-	 * @Param username
-	 * @Param password
-	 */
-	@RequestMapping(path = "/user", method = RequestMethod.POST)
-	public boolean findAccountWithUserId(@RequestBody String username, String password) {
-		uDAO.create(username, password);
-		return true;
-	}
+
 	
 	// findAccountbyid
 	
