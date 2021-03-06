@@ -1,9 +1,17 @@
 package com.techelevator.tenmo;
 
+import java.util.List;
+import java.util.Scanner;
+
 import com.techelevator.tenmo.models.AuthenticatedUser;
+import com.techelevator.tenmo.models.Transfer;
 import com.techelevator.tenmo.models.UserCredentials;
+import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.AuthenticationServiceException;
+import com.techelevator.tenmo.services.TransferService;
+import com.techelevator.tenmo.services.TransferServiceException;
+import com.techelevator.tenmo.services.UserService;
 import com.techelevator.view.ConsoleService;
 
 public class App {
@@ -25,6 +33,9 @@ private static final String API_BASE_URL = "http://localhost:8080/";
     private AuthenticatedUser currentUser;
     private ConsoleService console;
     private AuthenticationService authenticationService;
+    private TransferService transferService;
+    private UserService userService;
+    private AccountService accountService;
 
     public static void main(String[] args) {
     	App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL));
@@ -34,6 +45,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
     public App(ConsoleService console, AuthenticationService authenticationService) {
 		this.console = console;
 		this.authenticationService = authenticationService;
+	
 	}
 
 	public void run() {
@@ -47,6 +59,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 	private void mainMenu() {
 		while(true) {
+			
 			String choice = (String)console.getChoiceFromOptions(MAIN_MENU_OPTIONS);
 			if(MAIN_MENU_OPTION_VIEW_BALANCE.equals(choice)) {
 				viewCurrentBalance();
@@ -68,13 +81,27 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewCurrentBalance() {
-		// TODO Auto-generated method stub
+		System.out.println("Enter your account ID");
+		Scanner scanner = new Scanner(System.in);
+		String user = scanner.nextLine();
+		int userId = Integer.parseInt(user);
+		double balance = accountService.viewCurrentBalance(userId);
+		System.out.println("You have " + balance + " in your account.");
+		
+		//AccountService needs instantiated?
 		
 	}
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
+//		System.out.println("Enter your account ID");
+//		Scanner scanner = new Scanner(System.in);
+//		String user = scanner.nextLine();
+//		int userId = Integer.parseInt(user);
+//		List<Transfer> history = transferService.viewMyTransferHistory(userId);
+//		System.out.println(history);
+		System.out.println(currentUser);
 		
+		//TransferService needs instantiated?
 	}
 
 	private void viewPendingRequests() {
@@ -83,8 +110,22 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void sendBucks() {
-		// TODO Auto-generated method stub
+		Scanner scanner = new Scanner(System.in);
+		String from = scanner.nextLine();
+		int fromId =Integer.parseInt(from);
+		String amountString = scanner.nextLine();
+		double amount = Double.parseDouble(amountString);
+		String to = scanner.nextLine();
+		int toId =Integer.parseInt(to);
+		boolean result = transferService.sendBucks(fromId, amount, toId);
+		if(result) {
+			System.out.println("Transfer Successful");
+		} else {
+			System.out.println();
+			}
 		
+	
+		//TransferService needs instantiated?
 	}
 
 	private void requestBucks() {
@@ -139,6 +180,9 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			UserCredentials credentials = collectUserCredentials();
 		    try {
 				currentUser = authenticationService.login(credentials);
+				AccountService.AUTH_TOKEN = currentUser.getToken();
+				UserService.AUTH_TOKEN = currentUser.getToken();
+				TransferService.AUTH_TOKEN = currentUser.getToken();
 			} catch (AuthenticationServiceException e) {
 				System.out.println("LOGIN ERROR: "+e.getMessage());
 				System.out.println("Please attempt to login again.");

@@ -29,11 +29,12 @@ public class JDBCTransferDAO implements TransferDAO {
 	 * elsewhere ^
 	 */
 	@Override
-	public void sendBucks(int fromUserID, double request, int toUserID) {
+	public boolean sendBucks(int fromUserID, double request, int toUserID) {
 		//Logic
+		boolean success = false;
 		Account sender = aDAO.getAccountByUserId(fromUserID);
 		Account reciever = aDAO.getAccountByUserId(toUserID);
-		if(sender.getBalance() >= request) {
+		if(sender.getBalance() >= request && sender != reciever && request > 0) {
 			double senderBalance = sender.getBalance() - request;
 			sender.setBalance(senderBalance);
 			double receiverBalance = reciever.getBalance() + request;
@@ -48,12 +49,14 @@ public class JDBCTransferDAO implements TransferDAO {
 			jdbcTemplate.update(sqlUpdateSender, sender.getBalance(), sender.getAccountId());
 			String sqlUpdateReciever = "UPDATE accounts SET balance = ? WHERE account_id = ?;";
 			jdbcTemplate.update(sqlUpdateReciever, reciever.getBalance(), reciever.getAccountId());
+			success = true;
+			System.out.println("Transaction Successful");
 			
 		} else {
 			System.out.println("Insufficient Funds");
 			//throw new InsufficientFundException();
 		}
-		
+		return success;
 	}
 
 	// view entire transfer history of a user by account_id
@@ -61,13 +64,9 @@ public class JDBCTransferDAO implements TransferDAO {
 	@Override
 	public List<Transfer> viewTransferHistory(int accountId) {
 		List<Transfer> tansferHistory = new ArrayList<>();
-<<<<<<< HEAD
 
 		String sqlGetTransferHistory = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers WHERE account_from = ?";
 
-=======
-		String sqlGetTransferHistory = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers WHERE account_from = ?";
->>>>>>> b677dc94159ede4006b141623bbd28941876060e
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetTransferHistory, accountId);
 		while (results.next()) {
 			Transfer transferResult = mapRowToTransfer(results);

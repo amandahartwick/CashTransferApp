@@ -73,8 +73,8 @@ public class JDBCAccountTest {
 
 	@Test
 	public void get_account_by_user_test() {
-		List<Account> mine = dao.getAccountByUserId(TU1);
-		Assert.assertEquals(mine.get(0).getAccountId(), TA1);
+		Account mine = dao.getAccountByUserId(TU1);
+		Assert.assertEquals(mine.getAccountId(), TA1);
 	}
 
 	@Test

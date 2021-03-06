@@ -16,74 +16,71 @@ import com.techelevator.tenmo.models.Account;
 
 public class AccountService {
 
-	public static final String API_ACCOUNT_URL = "http://localhost:8080/account";
+	public static final String API_ACCOUNT_URL = "http://localhost:8080/api/v1";
 	public RestTemplate restTemplate = new RestTemplate();
 	public static String AUTH_TOKEN = "";
-	
-	
-	// THIS METHOD NEEDS AN UPDATED URL BASED ON THE API
-	List<Account> findAll() throws AccountServiceException {
+
+	List<Account> findAllAccounts() {
 		List<Account> accounts = new ArrayList<>();
 		try {
 			Account[] list = restTemplate
-					.exchange(API_ACCOUNT_URL + "", HttpMethod.GET, makeAuthEntity(), Account[].class).getBody();
+					.exchange(API_ACCOUNT_URL + "/accounts", HttpMethod.GET, makeAuthEntity(), Account[].class)
+					.getBody();
 			for (Account u : list) {
 				accounts.add(u);
 			}
 		} catch (RestClientResponseException ex) {
-			throw new AccountServiceException(ex.getRawStatusCode() + " : " + ex.getResponseBodyAsString());
+			ex.printStackTrace();
 		}
 		return accounts;
 
 	}
 
-	
-	// THIS METHOD NEEDS AN UPDATED URL BASED ON THE API
-	public Account getAccountbyAccountID(int accountId) {
+	public Account findAccountWithAccountId(int accountId) {
 		Account account = null;
 		try {
-			account = restTemplate
-					.exchange(API_ACCOUNT_URL + "/" + accountId, HttpMethod.GET, makeAuthEntity(), Account.class)
-					.getBody();
+			account = restTemplate.exchange(API_ACCOUNT_URL + "/accounts/" + accountId, HttpMethod.GET,
+					makeAuthEntity(), Account.class).getBody();
 		} catch (RestClientResponseException ex) {
 			System.out.println("Could not retrieve the account.");
+			ex.printStackTrace();
 		} catch (ResourceAccessException ex) {
 			System.out.println("A network error occurred.");
+			ex.printStackTrace();
 		}
 		return account;
 
 	}
 
-	
-	
-	// THIS METHOD NEEDS AN UPDATED URL BASED ON THE API
+	// DWNT
 	public Account getAccountbyUserID(int userId) {
 		Account account = null;
 		try {
 			account = restTemplate
-					.exchange(API_ACCOUNT_URL + "/" + userId, HttpMethod.GET, makeAuthEntity(), Account.class)
+					.exchange(API_ACCOUNT_URL + "/accounts/" + userId, HttpMethod.GET, makeAuthEntity(), Account.class)
 					.getBody();
 		} catch (RestClientResponseException ex) {
 			System.out.println("Could not retrieve the account.");
+			ex.printStackTrace();
 		} catch (ResourceAccessException ex) {
 			System.out.println("A network error occurred.");
+			ex.printStackTrace();
 		}
 		return account;
 
 	}
 
-	
-	
-	// THIS METHOD NEEDS AN UPDATED URL BASED ON THE API
 	public double viewCurrentBalance(int accountId) {
 		Account account = null;
 		try {
-			account = restTemplate.exchange(API_ACCOUNT_URL + "/" + accountId + "/balance", HttpMethod.GET,
+			account = restTemplate.exchange(API_ACCOUNT_URL + "/accounts/" + accountId + "/balance", HttpMethod.GET,
 					makeAuthEntity(), Account.class).getBody();
 		} catch (RestClientResponseException ex) {
 			System.out.println("Could not retrieve the account.");
+			ex.printStackTrace();
 		} catch (ResourceAccessException ex) {
 			System.out.println("A network error occurred.");
+			ex.printStackTrace();
 		}
 		return account.getBalance();
 

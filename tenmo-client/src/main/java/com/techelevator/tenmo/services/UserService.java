@@ -13,77 +13,72 @@ import com.techelevator.tenmo.models.User;
 
 public class UserService {
 	public static String AUTH_TOKEN = "";
-	private final String BASE_URL = "http://localhost:8080/";
+	private final String BASE_URL = "http://localhost:8080/api/v1";
 	private final RestTemplate restTemplate = new RestTemplate();
-//	private final ConsoleService console = new ConsoleService();
 
-	public boolean create(String username, String password) throws UserServiceException {
+	public boolean create(String username, String password) {
 		boolean didItCreate = false;
 		try {
-			didItCreate = restTemplate.exchange(BASE_URL + "user" + "?username=" + username + "&?password=" + password,
+			didItCreate = restTemplate.exchange(BASE_URL + "/user" + "?username=" + username + "&?password=" + password,
 					HttpMethod.POST, makeAuthEntity(), boolean.class).getBody();
 		} catch (RestClientResponseException e) {
-			throw new UserServiceException(e.getRawStatusCode() + " : " + e.getResponseBodyAsString());
+			System.out.println("Bad Input");
 		}
 		return didItCreate;
 	};
 
-	List<User> findAll() throws UserServiceException {
+	List<User> findAllUsers() {
 		List<User> users = new ArrayList<>();
 		try {
-			User[] list = restTemplate.exchange(BASE_URL + "", HttpMethod.GET, makeAuthEntity(), User[].class)
+			User[] list = restTemplate.exchange(BASE_URL + "/users", HttpMethod.GET, makeAuthEntity(), User[].class)
 					.getBody();
 			for (User u : list) {
 				users.add(u);
 			}
 		} catch (RestClientResponseException ex) {
-			throw new UserServiceException(ex.getRawStatusCode() + " : " + ex.getResponseBodyAsString());
+			System.out.println("Bad Input");
 		}
 		return users;
 
-	} // THIS METHOD NEEDS AN UPDATED URL BASED ON THE API
+	} // DWNT
 
-	User findById() throws UserServiceException {
+	User findById(int user_id) {
 		User idUser = null;
 		try {
 			idUser = restTemplate.exchange(BASE_URL + "/UPDATEME", HttpMethod.GET, makeAuthEntity(), User.class)
 					.getBody();
 		} catch (RestClientResponseException ex) {
-			throw new UserServiceException(ex.getRawStatusCode() + " : " + ex.getResponseBodyAsString());
+			System.out.println("Bad Input");
 		}
 
 		return idUser;
 	}
-	// THIS METHOD NEEDS AN UPDATED URL BASED ON THE API
+	// DWNT
 
-	User findIdByUserName() throws UserServiceException {
+	User findIdByUserName() {
 		User theUser = null;
 		try {
 			theUser = restTemplate.exchange(BASE_URL + "/UPDATEME", HttpMethod.GET, makeAuthEntity(), User.class)
 					.getBody();
 		} catch (RestClientResponseException ex) {
-			throw new UserServiceException(ex.getRawStatusCode() + " : " + ex.getResponseBodyAsString());
+			System.out.println("Bad Input");
 		}
 
 		return theUser;
 	}
-	// THIS METHOD NEEDS AN UPDATED URL BASED ON THE API
-	
-	String findUserNameById() throws UserServiceException{
+	// DWNT
+
+	String findUserNameById() {
 		User theUser = null;
 		try {
 			theUser = restTemplate.exchange(BASE_URL + "/UPDATEME", HttpMethod.GET, makeAuthEntity(), User.class)
 					.getBody();
 		} catch (RestClientResponseException ex) {
-			throw new UserServiceException(ex.getRawStatusCode() + " : " + ex.getResponseBodyAsString());
+			System.out.println("Bad Input");
 		}
 
 		return theUser.getUsername();
 	}
-	// THIS METHOD NEEDS AN UPDATED URL BASED ON THE API
-	
-	
-	
 
 	private HttpEntity<User> makeUserEntity(User user) {
 		HttpHeaders headers = new HttpHeaders();

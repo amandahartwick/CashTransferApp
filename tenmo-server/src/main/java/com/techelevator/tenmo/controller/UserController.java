@@ -116,9 +116,11 @@ public class UserController {
 	 * @Param request -- amount to send
 	 * @Param accountId_to -- account to send money to
 	 */
-	@RequestMapping(path = "/transfers", method = RequestMethod.POST)
-	public void sendMoney (@RequestBody Transfer transfer, int accountId_from, double request, int accountId_to) {
-		tDAO.sendBucks(accountId_from, accountId_from, accountId_to);
+	@RequestMapping(path = "/transfers", method = RequestMethod.GET)
+	public boolean sendMoney (@RequestBody Transfer transfer) {
+		boolean tdao = false;
+		tdao = tDAO.sendBucks(transfer.getAccount_from(), transfer.getAmount(), transfer.getAccount_to());
+		return tdao;
 	}
 	
 	/*
