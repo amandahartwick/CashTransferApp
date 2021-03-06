@@ -60,7 +60,6 @@ public class UserController {
 		}
 	}
 	
-
 	 // *****************
 	 // *   /USERS      *
 	 // *****************
@@ -117,8 +116,8 @@ public class UserController {
 	 * @Param accountId_to -- account to send money to
 	 */
 	@RequestMapping(path = "/transfers", method = RequestMethod.POST)
-	public void sendMoney (@RequestBody Transfer transfer, int accountId_from, double request, int accountId_to) {
-		tDAO.sendBucks(accountId_from, accountId_from, accountId_to);
+	public void sendMoney (@RequestBody Transfer transfer) {
+		tDAO.sendBucks(transfer.getAccount_from(),transfer.getAmount(), transfer.getAccount_to());
 	}
 	
 	/*
