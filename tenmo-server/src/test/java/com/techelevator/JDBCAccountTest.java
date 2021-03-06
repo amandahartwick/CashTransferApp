@@ -1,8 +1,10 @@
 package com.techelevator;
+import static org.junit.Assert.assertEquals;
+
 import java.sql.SQLException;
 import java.util.List;
 import org.junit.*;
-import static org.junit.Assert.assertEquals;
+import org.junit.Assert;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
@@ -44,6 +46,7 @@ public class JDBCAccountTest {
 		String truncate = "TRUNCATE TABLE accounts CASCADE";
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		jdbcTemplate.update(truncate);
+		dao = new JDBCAccountDAO(jdbcTemplate);
 		
 		String SqlAdd = "INSERT INTO accounts (balance, account_id, user_id)"
 				+ " VALUES (?, ?, ?);";
@@ -63,16 +66,22 @@ public class JDBCAccountTest {
 
 	@Test
 	public void get_account_by_id() {
+		Account mine = dao.getAccountByAccountId(TA1);
+		Assert.assertEquals(mine.getUserId(), TU1);
 
 	}
 
 	@Test
-	public void get_account_by_username_test() {
-
+	public void get_account_by_user_test() {
+		List<Account> mine = dao.getAccountByUserId(TU1);
+		Assert.assertEquals(mine.get(0).getAccountId(), TA1);
 	}
 
 	@Test
 	public void get_balance_test() {
+		double balance = dao.getBalance(TA1);
+		Assert.assertEquals(1000.00, balance, 0);
+		
 
 	}
 
@@ -87,7 +96,7 @@ public class JDBCAccountTest {
 	private void assertAccountsAreEqual(Account expected, Account actual) {
 		assertEquals(expected.getAccountId(), actual.getAccountId());
 		assertEquals(expected.getUserId(), actual.getUserId());
-		Assert.assertEquals(expected.getBalance(), actual.getBalance());
+		assertEquals(expected.getBalance(), actual.getBalance(), 0);
 		
 		
 		
