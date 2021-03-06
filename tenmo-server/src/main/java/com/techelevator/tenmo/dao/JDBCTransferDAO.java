@@ -8,9 +8,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.InsufficientFundException;
 import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.dao.JDBCAccountDAO;
 
 @Component
 public class JDBCTransferDAO implements TransferDAO {
@@ -31,10 +29,10 @@ public class JDBCTransferDAO implements TransferDAO {
 	 * elsewhere ^
 	 */
 	@Override
-	public void sendBucks(int accountId_from, double request, int accountId_to) {
+	public void sendBucks(int fromUserID, double request, int toUserID) {
 		//Logic
-		Account sender = aDAO.getAccountByAccountId(accountId_from);
-		Account reciever = aDAO.getAccountByAccountId(accountId_to);
+		Account sender = aDAO.getAccountByUserId(fromUserID);
+		Account reciever = aDAO.getAccountByUserId(toUserID);
 		if(sender.getBalance() >= request) {
 			double senderBalance = sender.getBalance() - request;
 			sender.setBalance(senderBalance);
@@ -63,11 +61,7 @@ public class JDBCTransferDAO implements TransferDAO {
 	@Override
 	public List<Transfer> viewTransferHistory(int accountId) {
 		List<Transfer> tansferHistory = new ArrayList<>();
-<<<<<<< HEAD
-		String sqlGetTransferHistory = "SELECT transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers WHERE account_from = ?";
-=======
 		String sqlGetTransferHistory = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers WHERE account_from = ?";
->>>>>>> 3e54d7804041409ebc15ee4967151f820e30b975
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetTransferHistory, accountId);
 		while (results.next()) {
 			Transfer transferResult = mapRowToTransfer(results);

@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,11 +20,15 @@ import com.techelevator.tenmo.dao.AccountDAO;
 import com.techelevator.tenmo.dao.TransferDAO;
 import com.techelevator.tenmo.dao.UserDAO;
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.RegisterUserDTO;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
+import com.techelevator.tenmo.model.UserAlreadyExistsException;
+import com.techelevator.tenmo.model.UsesrAlreadyExistsException;
 import com.techelevator.tenmo.security.jwt.TokenProvider;
 
 @RestController
+@RequestMapping("/api/v1")
 
 public class UserController {
 
@@ -40,43 +45,50 @@ public class UserController {
 	}
 	
 	 // *****************
-	 // *     USER      *
+	 // *   /REGISTER   *
 	 // *****************
 	
 	/*
-	 * Look up user account.
-	 * 
-	 * @Param username
-	 * @Param password
+	 * Register new user account.
 	 */
 	@ResponseStatus(HttpStatus.CREATED)
-	@RequestMapping(path = "/user", method = RequestMethod.POST)
-	public boolean findAccountWithUserId(@RequestBody Account account, @RequestParam String username, @RequestParam String password) {
-		return uDAO.create(username, password);
+	@RequestMapping(path = "/register", method = RequestMethod.POST)
+	public void findAccountWithUserId(@Valid @RequestBody RegisterUserDTO newUser) {
+		try { uDAO.findByUsername(newUser.getUsername());
+			throw new UserAlreadyExistsException();
+		} catch (UsernameNotFoundException notFoundExeption) {
+			uDAO.create(newUser.getUsername(), newUser.getPassword());
+		}
 	}
 	
+	 // *****************
+	 // *     /USER     *
+	 // *****************
+
+	/*
+	 * Look up all accounts.
+	 */
+	@RequestMapping(path = "/users", method = RequestMethod.GET)
+	public List<Account> findAllAccounts() {
+		return aDAO.findAll();
+	}
+
 	/*
 	 * Look up user account.
 	 * 
 	 * @Param user_id
 	 */
-	@RequestMapping(path = "/{user_id}", method = RequestMethod.GET)
+	@RequestMapping(path = "/users/{user_id}", method = RequestMethod.GET)
 	public Account findAccountWithUserId(@PathVariable int user_id) {
 		return aDAO.getAccountByAccountId(user_id);
 	}
 
-	/*
-	 * Look up all accounts.
-	 */
-	@RequestMapping(path = "/user", method = RequestMethod.GET)
-	public List<Account> findAllAccounts() {
-		return aDAO.findAll();
-	}
+
 	
 	// findAccountbyid
 	
 	 // *****************
-	 // *    TRANSFER   *
+	 // *   /TRANSFER   *
 	 // *****************
 	
 	/*
@@ -84,15 +96,14 @@ public class UserController {
 	 * 
 	 * @Param account_id
 	 */
-	@RequestMapping(path = "{user_id}/transfer", method = RequestMethod.GET)
-	public List<Transfer> findTransferHistory(@PathVariable int user_id) {
-		return tDAO.viewTransferHistory(user_id);
-		
-		//user id and account id are different so this isnot working
+	@ResponseStatus(HttpStatus.CREATED)
+	@RequestMapping(path = "/transfer/sendmoney", method = RequestMethod.POST)
+	public void sendMoney(@Valid @RequestBody Transfer transfer, int accountId_from, double request, int accountId_to) {
+		tDAO.sendBucks(accountId_from, accountId_from, accountId_to);
 	}
 
 	 // *****************
-	 // *    ACCOUNT    *
+	 // *   /ACCOUNT    *
 	 // *****************
 	 
 

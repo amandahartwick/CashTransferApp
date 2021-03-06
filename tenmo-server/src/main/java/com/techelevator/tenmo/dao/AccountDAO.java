@@ -10,7 +10,7 @@ public interface AccountDAO {
 	
 	public Account getAccountByAccountId(int accountId);
 	
-	public List<Account> getAccountByUserId(int userId);
+	public Account getAccountByUserId(int userId);
 
 	public double getBalance(int accountId);	
 }
