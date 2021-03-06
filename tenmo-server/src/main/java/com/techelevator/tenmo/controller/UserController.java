@@ -6,6 +6,8 @@ import javax.security.auth.login.AccountNotFoundException;
 import javax.validation.Valid;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,55 +15,75 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.techelevator.tenmo.dao.AccountDAO;
 import com.techelevator.tenmo.dao.TransferDAO;
-//import com.techelevator.tenmo.dao.UserDAO;
+import com.techelevator.tenmo.dao.UserDAO;
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.security.jwt.TokenProvider;
 
 @RestController
-@PreAuthorize("isAuthenticated()")
 
 public class UserController {
 
-	//private final TokenProvider tokenProvider;
+	private final TokenProvider tokenProvider;
 	private TransferDAO tDAO;
 	private AccountDAO aDAO;
-	//private UserDAO uDAO;
+	private UserDAO uDAO;
 
-	public UserController(TransferDAO tdao, AccountDAO aDAO) {		//TokenProvider tokenProvider 
-	//	this.tokenProvider = tokenProvider;
+	public UserController(TokenProvider tokenProvider, AccountDAO aDAO, UserDAO uDAO, TransferDAO tDAO) {
+		this.tokenProvider = tokenProvider;
 		this.tDAO = tDAO;
 		this.aDAO = aDAO;
-	//	this.uDAO = uDAO;
+		this.uDAO = uDAO;
 	}
 	
-	/**
-	 * Retrieves account based on account_id. If user_id in empty or wrong user stays in loop.
-	 *
-	 * @param account_id -- the user id to be searched for
+	 // *****************
+	 // *     USER      *
+	 // *****************
+	
+	/*
+	 * Look up user account.
+	 * 
+	 * @Param user_id
 	 */
+	@RequestMapping(path = "/user/{user_id}", method = RequestMethod.GET)
+	public Account findAccountWithUserId(@PathVariable int user_id) {
+		return aDAO.getAccountByAccountId(user_id);
+	}
 
-	@PreAuthorize ("permitAll")
-	@RequestMapping(value = "account/{account_id}", method = RequestMethod.GET)
-	public List<Account> findAccountByAccountId(@Valid @RequestParam(defaultValue = "0") int user_id) throws AccountNotFoundException {
+	/*
+	 * Look up user account.
+	 * 
+	 * @Param username
+	 * @Param password
+	 */
+	@RequestMapping(path = "/user", method = RequestMethod.POST)
+	public boolean findAccountWithUserId(@RequestBody String username, String password) {
+		uDAO.create(username, password);
+		return true;
+	}
+	
+	// findAccountbyid
+	
+	 // *****************
+	 // *    TRANSFER   *
+	 // *****************
+	
+	
+	
+	 // *****************
+	 // *    ACCOUNT    *
+	 // *****************
+	 
+	/*
+	// Retrieves all accounts
+    @PreAuthorize("hasRole('ADMIN')")
+	@RequestMapping(path = "/account", method = RequestMethod.GET)
+	public List<Account> findAllAccounts () {
 		if(user_id > 0) {
-		//	return aDAO.getAccountByAccountId(user_id);
+			return aDAO.getAccountByUserId(user_id);
 		}
 		return aDAO.findAll();
 	}
+	*/
 	
-	/**
-	 * Retrieves transfer history based on user_id. If user_id in empty or wrong user stays in loop.
-	 *
-	 * @param user_id -- the user id to be searched for
-	 * @param transfer_id --  the transfer id to be searched for
-	 */
-
-//	@PreAuthorize ("hasAnyRole('ADMIN', 'CREATOR')")
-//	@RequestMapping(value = "account/transfer/{transfer_id}", method = RequestMethod.GET)
-//	public List<Account> list(@Valid @RequestParam(defaultValue = "0") int user_id) {
-//		if(user_id > 0) {
-//			return aDAO.getAccountByAccountId(user_id);
-//		}
-//		System.out.println("Please enter a valid user id.");
-//	}
-}
+	}

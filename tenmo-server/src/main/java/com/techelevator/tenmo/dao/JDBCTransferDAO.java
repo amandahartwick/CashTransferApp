@@ -103,7 +103,7 @@ public class JDBCTransferDAO implements TransferDAO {
 	@Override
 	public List<Transfer> viewTransferHistory(int accountId) {
 		List<Transfer> tansferHistory = new ArrayList<>();
-		String sqlGetTransferHistory = "SELECT transfer_history, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers WHERE account_from = ?";
+		String sqlGetTransferHistory = "SELECT transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers WHERE account_from = ?";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetTransferHistory, accountId);
 		while (results.next()) {
 			Transfer transferResult = mapRowToTransfer(results);
