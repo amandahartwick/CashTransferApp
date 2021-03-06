@@ -19,6 +19,7 @@ import com.techelevator.tenmo.dao.AccountDAO;
 import com.techelevator.tenmo.dao.TransferDAO;
 import com.techelevator.tenmo.dao.UserDAO;
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.security.jwt.TokenProvider;
 
@@ -50,8 +51,8 @@ public class UserController {
 	 */
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(path = "/user", method = RequestMethod.POST)
-	public boolean findAccountWithUserId(@RequestBody Account account) {
-		return uDAO.create();
+	public boolean findAccountWithUserId(@RequestBody Account account, @RequestParam String username, @RequestParam String password) {
+		return uDAO.create(username, password);
 	}
 	
 	/*
@@ -59,12 +60,18 @@ public class UserController {
 	 * 
 	 * @Param user_id
 	 */
-	@RequestMapping(path = "/user/{user_id}", method = RequestMethod.GET)
+	@RequestMapping(path = "/{user_id}", method = RequestMethod.GET)
 	public Account findAccountWithUserId(@PathVariable int user_id) {
 		return aDAO.getAccountByAccountId(user_id);
 	}
 
-
+	/*
+	 * Look up all accounts.
+	 */
+	@RequestMapping(path = "/user", method = RequestMethod.GET)
+	public List<Account> findAllAccounts() {
+		return aDAO.findAll();
+	}
 	
 	// findAccountbyid
 	
@@ -72,22 +79,22 @@ public class UserController {
 	 // *    TRANSFER   *
 	 // *****************
 	
-	
-	
+	/*
+	 * Look up transfer history.
+	 * 
+	 * @Param account_id
+	 */
+	@RequestMapping(path = "{user_id}/transfer", method = RequestMethod.GET)
+	public List<Transfer> findTransferHistory(@PathVariable int user_id) {
+		return tDAO.viewTransferHistory(user_id);
+		
+		//user id and account id are different so this isnot working
+	}
+
 	 // *****************
 	 // *    ACCOUNT    *
 	 // *****************
 	 
-	/*
-	// Retrieves all accounts
-    @PreAuthorize("hasRole('ADMIN')")
-	@RequestMapping(path = "/account", method = RequestMethod.GET)
-	public List<Account> findAllAccounts () {
-		if(user_id > 0) {
-			return aDAO.getAccountByUserId(user_id);
-		}
-		return aDAO.findAll();
-	}
-	*/
+
 	
 	}
