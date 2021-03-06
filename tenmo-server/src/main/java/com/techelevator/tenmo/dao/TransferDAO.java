@@ -7,6 +7,7 @@ import com.techelevator.tenmo.model.Transfer;
 public interface TransferDAO {
 	public void sendBucks(int accountId_from, double request, int accountId_to);
 
+	//OPTIONAL
 	public void requestBucks(int accountId_from, double request, int accountId_to);
 	
 	public List<Transfer> viewTransferHistory(int accountId);

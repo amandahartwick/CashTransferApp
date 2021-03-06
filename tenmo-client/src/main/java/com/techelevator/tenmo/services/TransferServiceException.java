@@ -1,9 +1,9 @@
 package com.techelevator.tenmo.services;
 
-public class UserServiceException extends Exception {
+public class TransferServiceException extends Exception {
     private static final long serialVersionUID = 1L;
 
-    public UserServiceException(String message) {
+    public TransferServiceException(String message) {
         super(message);
     }
 }
