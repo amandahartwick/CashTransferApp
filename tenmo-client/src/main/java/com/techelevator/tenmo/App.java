@@ -125,14 +125,14 @@ public class App {
 		int fromUserId = currentUser.getUser().getId();
 		
 		// List ids and name of people you can send money to
-		System.out.println("-------------------------------------------");
-		System.out.println("Users");
-		System.out.println("ID          Name");
-		System.out.println("-------------------------------------------");
+		System.out.println("------------------------------------------- \n "
+							+ "Users \n "
+							+ "ID \t Name "
+							+ "\n -------------------------------------------");
 		List<User> users = userService.findAllUsers();
 		for (User user : users) {
 			if (user.getId() != currentUser.getUser().getId()) {
-			System.out.println(user.getId() + "         " + user.getUsername());
+			System.out.println(user.getId() + "\t" + user.getUsername());
 			}
 		}
 		System.out.println("---------");
@@ -156,7 +156,7 @@ public class App {
 		if (result != null) {
 			System.out.println("Transfer successful!! Thank you.");
 		} else {
-			System.out.println("Transfer failed. Try again, buddy.");
+			System.out.println("Transfer failed. Try again, bub.");
 		}
 	}
 
