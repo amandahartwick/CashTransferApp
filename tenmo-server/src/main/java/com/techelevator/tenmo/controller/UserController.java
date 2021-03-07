@@ -89,21 +89,7 @@ public class UserController {
 	 * @Param account_id
 	 */
 	
-<<<<<<< HEAD
-	
-	
-//	@RequestMapping(path = "/accounts/{account_id}/username", method = RequestMethod.GET)
-//	public String findUser(@PathVariable int account_id) {
-//		Account theAccount = aDAO.getAccountByAccountId(account_id);
-//		int id = theAccount.getUserId();
-//		String user_name = uDAO.findUsernameByUserId(id);
-//		return user_name;
-//	}
-//	
-	
-	
-=======
->>>>>>> b0c4a9be6e1bfb8d5fa9785b4047196e8ecbdab6
+
 	@RequestMapping(path = "/accounts/accountname/{user_name}", method = RequestMethod.GET)
 	public int findAccountWithUserName(@PathVariable String user_name) {
 		return uDAO.findIdByUsername(user_name);
