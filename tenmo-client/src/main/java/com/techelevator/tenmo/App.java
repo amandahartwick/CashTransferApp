@@ -125,7 +125,7 @@ public class App {
 		int fromUserId = currentUser.getUser().getId();
 		
 		// List ids and name of people you can send money to
-		System.out.println("------------------------------------------- \n "
+		System.out.println("-------------------------------------------\n "
 							+ "Users \n "
 							+ "ID \t Name "
 							+ "\n -------------------------------------------");
