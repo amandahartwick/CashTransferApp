@@ -29,7 +29,18 @@ public class JDBCAccountDAO implements AccountDAO {
 			}
 			return allAccounts;
 	}
-
+	// find balance based on account_id
+	@Override
+	public double getBalance(int accountId) {
+		double currentBalance = 0.0;
+		String sqlGetcurrentBalance = "SELECT balance, account_id, user_id FROM accounts WHERE account_id = ?";
+		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetcurrentBalance, accountId);
+		while (results.next()) {
+			Account accountResult = mapRowToAccount(results);
+			currentBalance = accountResult.getBalance();
+		}
+		return currentBalance;
+	}
 	// find account by account_id
 	@Override
 	public Account getAccountByAccountId(int accountId) {
@@ -54,18 +65,7 @@ public class JDBCAccountDAO implements AccountDAO {
 		return allAccounts;
 	}
 
-	// find balance based on account_id
-	@Override
-	public double getBalance(int accountId) {
-		double currentBalance = 0.0;
-		String sqlGetcurrentBalance = "SELECT balance, account_id, user_id FROM accounts WHERE account_id = ?";
-		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetcurrentBalance, accountId);
-		while (results.next()) {
-			Account accountResult = mapRowToAccount(results);
-			currentBalance = accountResult.getBalance();
-		}
-		return currentBalance;
-	}
+
 
 	private Account mapRowToAccount(SqlRowSet result) {
 		Account acct = new Account();

@@ -70,7 +70,8 @@ public class AccountService {
 
 	}
 
-	public double viewCurrentBalance(int accountId) {
+	// 	REFACTOR
+	public double getBalance(int accountId) {
 		Account account = null;
 		try {
 			account = restTemplate.exchange(API_ACCOUNT_URL + "/accounts/" + accountId + "/balance", HttpMethod.GET,

@@ -44,6 +44,7 @@ public class UserController {
 	}
 	
 	 // *****************
+<<<<<<< HEAD
 	 // *   /REGISTER   *
 	 // *****************
 	
@@ -62,6 +63,8 @@ public class UserController {
 	
 
 	 // *****************
+=======
+>>>>>>> 9b4cc9cf7cac1b69331beca210a71b8c53a3e315
 	 // *   /USERS      *
 	 // *****************
 
@@ -96,6 +99,20 @@ public class UserController {
 	}
 	
 	/*
+	 * Look up account details.
+	 * 
+	 * @Param account_id
+	 */
+	@RequestMapping(path = "/accounts/{user_name}", method = RequestMethod.GET)
+	public int findAccountWithUserName(@PathVariable String user_name) {
+		return uDAO.findIdByUsername(user_name);
+	}
+	
+	@RequestMapping(path = "/accounts/{account_id}/balance", method = RequestMethod.GET)
+	public double findCurrentBalance(@PathVariable int account_id) {
+		return aDAO.getBalance(account_id);
+	}
+	/*
 	 * Look up user transfer history.
 	 * 
 	 * @Param account_id
@@ -116,6 +133,7 @@ public class UserController {
 	 * @Param request -- amount to send
 	 * @Param accountId_to -- account to send money to
 	 */
+
 	@RequestMapping(path = "/transfers", method = RequestMethod.GET)
 	public boolean sendMoney (@RequestBody Transfer transfer) {
 		boolean tdao = false;

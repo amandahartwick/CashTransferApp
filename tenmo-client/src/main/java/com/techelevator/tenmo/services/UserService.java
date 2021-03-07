@@ -27,7 +27,7 @@ public class UserService {
 		return didItCreate;
 	};
 
-	List<User> findAllUsers() {
+	public List<User> findAllUsers() {
 		List<User> users = new ArrayList<>();
 		try {
 			User[] list = restTemplate.exchange(BASE_URL + "/users", HttpMethod.GET, makeAuthEntity(), User[].class)
@@ -42,7 +42,7 @@ public class UserService {
 
 	} // DWNT
 
-	User findById(int user_id) {
+	public User findById(int user_id) {
 		User idUser = null;
 		try {
 			idUser = restTemplate.exchange(BASE_URL + "/UPDATEME", HttpMethod.GET, makeAuthEntity(), User.class)
@@ -55,20 +55,20 @@ public class UserService {
 	}
 	// DWNT
 
-	User findIdByUserName() {
-		User theUser = null;
+	public int findIdByUserName(String username) {
+		int theUserId = 0;
 		try {
-			theUser = restTemplate.exchange(BASE_URL + "/UPDATEME", HttpMethod.GET, makeAuthEntity(), User.class)
+			theUserId = restTemplate.exchange(BASE_URL + "/account/" + username , HttpMethod.GET, makeAuthEntity(), int.class)
 					.getBody();
 		} catch (RestClientResponseException ex) {
 			System.out.println("Bad Input");
+			ex.printStackTrace();
 		}
-
-		return theUser;
+		return theUserId;
 	}
 	// DWNT
 
-	String findUserNameById() {
+	public String findUserNameById() {
 		User theUser = null;
 		try {
 			theUser = restTemplate.exchange(BASE_URL + "/UPDATEME", HttpMethod.GET, makeAuthEntity(), User.class)
