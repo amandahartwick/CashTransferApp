@@ -95,19 +95,64 @@ public class App {
 		System.out.println("Current balance: " + userAcct.getBalance());
 	}
 
-	
-
 	private void viewTransferHistory() {
-		int userId = currentUser.getUser().getId();
-		List<Transfer> acctHistory = transferService.viewMyTransferHistory(userId);
-		for (Transfer t : acctHistory) {
-			System.out.println(t.toString());
-			
-		}
-		if(acctHistory == null) {
-			System.out.println("You haven't made any transfers yet!");
-		}
+		boolean transferView = true;
+		while (transferView) {
+			int userId = currentUser.getUser().getId();
+			List<User> users = userService.findAllUsers();
+			List<Transfer> transfers = transferService.viewMyTransferHistory(userId);
+			System.out.println("TRANSER HISTORY");
+			System.out.println("---------------");
+			for (Transfer t : transfers) {
+				User sender = userService.findById(t.getAccount_from());
+				User reciever = userService.findById(t.getAccount_to());
 
+				if (t.getAccount_from() == userId) {
+					System.out.println("Transfer ID: " + t.getTransfer_id() + "\t To: " + reciever.getUsername() + "\t"
+							+ "$" + t.getAmount());
+				} else {
+					System.out.println("Transfer ID: " + t.getTransfer_id() + "\t From:: " + sender.getUsername() + "\t"
+							+ "$" + t.getAmount());
+				}
+
+			}
+			if (transfers == null) {
+				System.out.println("You haven't made any transfers yet!");
+			}
+			System.out.println("\nEnter Transfer ID to see transfer details or 0 to exit");
+			Scanner scanner = new Scanner(System.in);
+			String inputAsString = scanner.nextLine();
+			int input = Integer.parseInt(inputAsString);
+			if (input > 0) {
+				Transfer detailedTransfer = transferService.transferByTransferId(input);
+				if (detailedTransfer == null) {
+					System.out.println("\nThat was not a valid transfer ID \n");
+				} else {
+					String type = "";
+					if (detailedTransfer.getTransfer_type_id() == 1) {
+						type = "Request";
+					} else {
+						type = "Send";
+					}
+					String status = "";
+					if (detailedTransfer.getTransfer_status_id() == 1) {
+						status = "Pending";
+					} else if (detailedTransfer.getTransfer_status_id() == 2) {
+						status = "Approved";
+					} else {
+						status = "Rejected";
+					}
+					System.out.println("\nTRANSFER DETAILS \n" + "---------------- \n" + "Id: "
+							+ detailedTransfer.getTransfer_id() + "\n" + "From: " + detailedTransfer.getAccount_from()
+							+ "\n" + "To: " + detailedTransfer.getAccount_to() + "\n" + "Type: " + type + "\n"
+							+ "Status: " + status + "\n");
+					
+				}
+			} else {
+				transferView = false;
+			}
+
+		}
 	}
 
 	private void viewPendingRequests() {
@@ -128,13 +173,20 @@ public class App {
 		System.out.println("How much money would you like to send " + toUserName + "?"); // how much do you want to send
 		String transferInput = scanner.nextLine();
 		double transferAmount = Double.parseDouble(transferInput); // assign entry to var. and search for id based on
-																	// that
-		Transfer result = transferService.sendBucks(fromUserId, transferAmount, toUserId);
-		if (result != null) {
-			System.out.println("Transfer successful!!");
+		
+		int userId = currentUser.getUser().getId();
+		Account userAcct = accountService.getAccountbyUserID(userId);
+		if(userAcct.getBalance() >= transferAmount) {
+			Transfer result = transferService.sendBucks(fromUserId, transferAmount, toUserId);
+			if (result != null) {
+				System.out.println("Transfer successful!!");
+			} else {
+				System.out.println("Transfer failed.");
+			}
 		} else {
-			System.out.println("Transfer failed.");
+			System.out.println("Shiiiiiiit");
 		}
+		
 	}
 
 	private void requestBucks() {

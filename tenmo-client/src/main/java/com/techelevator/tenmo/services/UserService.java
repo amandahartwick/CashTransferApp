@@ -47,7 +47,7 @@ public class UserService {
 	public User findById(int user_id) {
 		User idUser = null;
 		try {
-			idUser = restTemplate.exchange(BASE_URL + "/UPDATEME", HttpMethod.GET, makeAuthEntity(), User.class)
+			idUser = restTemplate.exchange(BASE_URL + "/users/" + user_id , HttpMethod.GET, makeAuthEntity(), User.class)
 					.getBody();
 		} catch (RestClientResponseException ex) {
 			System.out.println("Bad Input");
@@ -71,7 +71,7 @@ public class UserService {
 	}
 
 
-	public String findUserNameById() {
+	public String findUserNameById(int Id) {
 		User theUser = null;
 		try {
 			theUser = restTemplate.exchange(BASE_URL + "/UPDATEME", HttpMethod.GET, makeAuthEntity(), User.class)

@@ -73,6 +73,11 @@ public class UserController {
 		return uDAO.findAll();
 	}
 
+	@RequestMapping(path = "/users/{user_id}", method = RequestMethod.GET)
+	public User findByUserId(@PathVariable int user_id) {
+		return uDAO.findByUserId(user_id);
+	}
+
 	 // *****************
 	 // *   /ACCOUNT    *
 	 // *****************
@@ -103,6 +108,15 @@ public class UserController {
 	 */
 	
 	
+	
+//	@RequestMapping(path = "/accounts/{account_id}/username", method = RequestMethod.GET)
+//	public String findUser(@PathVariable int account_id) {
+//		Account theAccount = aDAO.getAccountByAccountId(account_id);
+//		int id = theAccount.getUserId();
+//		String user_name = uDAO.findUsernameByUserId(id);
+//		return user_name;
+//	}
+//	
 	
 	
 	@RequestMapping(path = "/accounts/accountname/{user_name}", method = RequestMethod.GET)

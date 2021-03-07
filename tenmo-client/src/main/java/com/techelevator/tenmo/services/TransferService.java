@@ -38,11 +38,11 @@ public class TransferService {
 	}
 
 	//USE CASE 6
-	public Transfer transferByTransferId(int accountId) {
+	public Transfer transferByTransferId(int transferId) {
 
 		Transfer transfers = new Transfer();
 		try {
-			transfers = restTemplate.exchange(API_TRANSFER_URL + "/accounts/" + accountId + "/transfers",
+			transfers = restTemplate.exchange(API_TRANSFER_URL + "/transfers/" + transferId,
 					HttpMethod.GET, makeAuthEntity(), Transfer.class).getBody();
 		} catch (RestClientResponseException ex) {
 			System.out.println("Bad Input");
