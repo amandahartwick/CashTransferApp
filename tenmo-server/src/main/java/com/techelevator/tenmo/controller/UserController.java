@@ -139,6 +139,7 @@ public class UserController {
 	 * @Param accountId_to -- account to send money to
 	 */
 
+	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(path = "/transfers", method = RequestMethod.POST)
 	public Transfer sendMoney (@RequestBody Transfer transfer) {
 		boolean tdao = false;

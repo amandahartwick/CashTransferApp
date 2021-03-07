@@ -19,7 +19,10 @@ public class TransferService {
 	public RestTemplate restTemplate = new RestTemplate();
 	public static String AUTH_TOKEN = "";
 
+	
+	//USE CASE 5
 	public List<Transfer> viewMyTransferHistory(int accountId) {
+
 		List<Transfer> transfers = new ArrayList<Transfer>();
 		try {
 			Transfer[] transArray = restTemplate.exchange(API_TRANSFER_URL + "/accounts/" + accountId + "/transfers",
@@ -27,6 +30,20 @@ public class TransferService {
 			for (Transfer t : transArray) {
 				transfers.add(t);
 			}
+		} catch (RestClientResponseException ex) {
+			System.out.println("Bad Input");
+			ex.printStackTrace();
+		}
+		return transfers;
+	}
+
+	//USE CASE 6
+	public Transfer transferByTransferId(int accountId) {
+
+		Transfer transfers = new Transfer();
+		try {
+			transfers = restTemplate.exchange(API_TRANSFER_URL + "/accounts/" + accountId + "/transfers",
+					HttpMethod.GET, makeAuthEntity(), Transfer.class).getBody();
 		} catch (RestClientResponseException ex) {
 			System.out.println("Bad Input");
 			ex.printStackTrace();
@@ -53,9 +70,8 @@ public class TransferService {
 		success.setAccount_to(receiver_id);
 		success.setAmount(amount);
 		try {
-			success = restTemplate
-					.exchange(API_TRANSFER_URL + "/transfers", HttpMethod.POST, makeTransferEntity(success), Transfer.class)
-					.getBody();
+			success = restTemplate.exchange(API_TRANSFER_URL + "/transfers", HttpMethod.POST,
+					makeTransferEntity(success), Transfer.class).getBody();
 		} catch (RestClientResponseException ex) {
 			System.out.println("Bad Input");
 			ex.printStackTrace();

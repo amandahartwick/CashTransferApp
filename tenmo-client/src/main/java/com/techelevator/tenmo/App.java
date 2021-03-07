@@ -102,6 +102,7 @@ public class App {
 		List<Transfer> acctHistory = transferService.viewMyTransferHistory(userId);
 		for (Transfer t : acctHistory) {
 			System.out.println(t.toString());
+			
 		}
 		if(acctHistory == null) {
 			System.out.println("You haven't made any transfers yet!");
