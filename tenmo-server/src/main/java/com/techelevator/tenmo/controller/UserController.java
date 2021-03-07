@@ -28,7 +28,7 @@ import com.techelevator.tenmo.security.jwt.TokenProvider;
 
 @RestController
 @RequestMapping("/api/v1")
-
+@PreAuthorize("isAuthenticated()")
 public class UserController {
 
 	private final TokenProvider tokenProvider;
@@ -43,6 +43,24 @@ public class UserController {
 		this.uDAO = uDAO;
 	}
 	
+	 // *****************
+	 // *   /REGISTER   *
+	 // *****************
+	
+	/*
+	 * Register new user account.
+	 */
+
+//	@RequestMapping(path = "/register", method = RequestMethod.POST)
+//	public void findAccountWithUserId (@RequestBody RegisterUserDTO newUser) {
+//		try { uDAO.findByUsername(newUser.getUsername());
+//			throw new UserAlreadyExistsException();
+//		} catch (UsernameNotFoundException notFoundExeption) {
+//			uDAO.create(newUser.getUsername(), newUser.getPassword());
+//		}
+//	}
+	
+
 	 // *****************
 	 // *   /USERS      *
 	 // *****************
@@ -66,6 +84,7 @@ public class UserController {
 	public List<Account> findAllAccounts() {
 		return aDAO.findAll();
 	}
+	
 
 	/*
 	 * Look up account details.
@@ -82,16 +101,26 @@ public class UserController {
 	 * 
 	 * @Param account_id
 	 */
-	@RequestMapping(path = "/accounts/{user_name}", method = RequestMethod.GET)
+	
+	
+	
+	
+	@RequestMapping(path = "/accounts/accountname/{user_name}", method = RequestMethod.GET)
 	public int findAccountWithUserName(@PathVariable String user_name) {
 		return uDAO.findIdByUsername(user_name);
 	}
 	
+<<<<<<< HEAD
 	/*
 	 * Get account balance.
 	 * 
 	 * @Param account_id
 	 */
+=======
+	
+	
+	
+>>>>>>> 6a3644bbe16b50bd9a6befb9f87b8c255dfb152c
 	@RequestMapping(path = "/accounts/{account_id}/balance", method = RequestMethod.GET)
 	public double findCurrentBalance(@PathVariable int account_id) {
 		return aDAO.getBalance(account_id);
@@ -118,11 +147,12 @@ public class UserController {
 	 * @Param accountId_to -- account to send money to
 	 */
 
-	@RequestMapping(path = "/transfers", method = RequestMethod.GET)
-	public boolean sendMoney (@RequestBody Transfer transfer) {
+	@ResponseStatus(HttpStatus.CREATED)
+	@RequestMapping(path = "/transfers", method = RequestMethod.POST)
+	public Transfer sendMoney (@RequestBody Transfer transfer) {
 		boolean tdao = false;
 		tdao = tDAO.sendBucks(transfer.getAccount_from(), transfer.getAmount(), transfer.getAccount_to());
-		return tdao;
+		return transfer;
 	}
 	
 	/*

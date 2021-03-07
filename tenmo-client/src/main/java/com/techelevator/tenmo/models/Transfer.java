@@ -1,6 +1,13 @@
 package com.techelevator.tenmo.models;
 
 public class Transfer {
+	@Override
+	public String toString() {
+		return "Transfer [transfer_id =" + transfer_id + ", transfer_type_id =" + transfer_type_id
+				+ ", transfer_status_id =" + transfer_status_id + ", account_from =" + account_from + ", account_to ="
+				+ account_to + ", amount =" + amount + "]";
+	}
+
 	int transfer_id;
 	int transfer_type_id;
 	int transfer_status_id;

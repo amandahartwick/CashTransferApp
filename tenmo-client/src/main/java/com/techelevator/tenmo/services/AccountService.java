@@ -20,7 +20,7 @@ public class AccountService {
 	public RestTemplate restTemplate = new RestTemplate();
 	public static String AUTH_TOKEN = "";
 
-	List<Account> findAllAccounts() {
+	public List<Account> findAllAccounts() {
 		List<Account> accounts = new ArrayList<>();
 		try {
 			Account[] list = restTemplate
@@ -70,8 +70,7 @@ public class AccountService {
 
 	}
 
-	// 	REFACTOR
-	public double getBalance(int accountId) {
+	public double viewCurrentBalance(int accountId) {
 		Account account = null;
 		try {
 			account = restTemplate.exchange(API_ACCOUNT_URL + "/accounts/" + accountId + "/balance", HttpMethod.GET,
