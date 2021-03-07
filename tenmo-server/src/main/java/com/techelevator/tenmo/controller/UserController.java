@@ -44,23 +44,6 @@ public class UserController {
 	}
 	
 	 // *****************
-	 // *   /REGISTER   *
-	 // *****************
-	
-	/*
-	 * Register new user account.
-	 */
-
-	@RequestMapping(path = "/register", method = RequestMethod.POST)
-	public void findAccountWithUserId (@RequestBody RegisterUserDTO newUser) {
-		try { uDAO.findByUsername(newUser.getUsername());
-			throw new UserAlreadyExistsException();
-		} catch (UsernameNotFoundException notFoundExeption) {
-			uDAO.create(newUser.getUsername(), newUser.getPassword());
-		}
-	}
-	
-	 // *****************
 	 // *   /USERS      *
 	 // *****************
 
@@ -95,6 +78,20 @@ public class UserController {
 	}
 	
 	/*
+	 * Look up account details.
+	 * 
+	 * @Param account_id
+	 */
+	@RequestMapping(path = "/accounts/{user_name}", method = RequestMethod.GET)
+	public int findAccountWithUserName(@PathVariable String user_name) {
+		return uDAO.findIdByUsername(user_name);
+	}
+	
+	@RequestMapping(path = "/accounts/{account_id}/balance", method = RequestMethod.GET)
+	public double findCurrentBalance(@PathVariable int account_id) {
+		return aDAO.getBalance(account_id);
+	}
+	/*
 	 * Look up user transfer history.
 	 * 
 	 * @Param account_id
@@ -115,17 +112,12 @@ public class UserController {
 	 * @Param request -- amount to send
 	 * @Param accountId_to -- account to send money to
 	 */
-<<<<<<< HEAD
-	@RequestMapping(path = "/transfers", method = RequestMethod.POST)
-	public void sendMoney (@RequestBody Transfer transfer) {
-		tDAO.sendBucks(transfer.getAccount_from(),transfer.getAmount(), transfer.getAccount_to());
-=======
+
 	@RequestMapping(path = "/transfers", method = RequestMethod.GET)
 	public boolean sendMoney (@RequestBody Transfer transfer) {
 		boolean tdao = false;
 		tdao = tDAO.sendBucks(transfer.getAccount_from(), transfer.getAmount(), transfer.getAccount_to());
 		return tdao;
->>>>>>> 37d062835db10549abc9e80f6cc03b50ac893efc
 	}
 	
 	/*
