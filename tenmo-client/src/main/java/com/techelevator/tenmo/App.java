@@ -43,15 +43,18 @@ public class App {
 	private AccountService accountService;
 
 	public static void main(String[] args) {
-		App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL), new AccountService(), new UserService());
+		App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL),
+				new AccountService(), new UserService(), new TransferService());
 		app.run();
 	}
 
-	public App(ConsoleService console, AuthenticationService authenticationService, AccountService accountService, UserService userService) {
+	public App(ConsoleService console, AuthenticationService authenticationService, AccountService accountService,
+			UserService userService, TransferService transferService) {
 		this.console = console;
 		this.authenticationService = authenticationService;
 		this.accountService = accountService;
 		this.userService = userService;
+		this.transferService = transferService;
 	}
 
 	public void run() {
@@ -87,24 +90,22 @@ public class App {
 	}
 
 	private void viewCurrentBalance() {
-
-		System.out.println("Enter your account ID");
-		Scanner scanner = new Scanner(System.in);
-		String account = scanner.nextLine();
-		int accountId = Integer.parseInt(account);
-		double balance = accountService.viewCurrentBalance(accountId);
-		System.out.println("You have " + balance + " in your account.");
-		//Don't take input on account, get their account
-		//AccountService needs instantiated?
-		
+		int userId = currentUser.getUser().getId();
+		Account userAcct = accountService.getAccountbyUserID(userId);
+		System.out.println("Current balance: " + userAcct.getBalance());
 	}
 
-
+	
 
 	private void viewTransferHistory() {
 		int userId = currentUser.getUser().getId();
 		List<Transfer> acctHistory = transferService.viewMyTransferHistory(userId);
-		System.out.println("Transfer history: " + acctHistory);
+		for (Transfer t : acctHistory) {
+			System.out.println(t.toString());
+		}
+		if(acctHistory == null) {
+			System.out.println("You haven't made any transfers yet!");
+		}
 
 	}
 
@@ -115,20 +116,20 @@ public class App {
 
 	private void sendBucks() {
 		int fromUserId = currentUser.getUser().getId();
-		
 		List<User> users = userService.findAllUsers(); // find list of all user names
-			for(User user: users) {
-				System.out.println(user.getUsername() + "/t"); // want just their username
-			}	
+		for (User user : users) {
+			System.out.println(user.getUsername()); // want just their username
+		}
 		Scanner scanner = new Scanner(System.in);
-		String from = scanner.nextLine();
-		int fromId =Integer.parseInt(from);
-		String amountString = scanner.nextLine();
-		double amount = Double.parseDouble(amountString);
-		String to = scanner.nextLine();
-		int toId =Integer.parseInt(to);
-		boolean result = transferService.sendBucks(fromUserId, transferAmount, toUserId);
-		if (result) {
+		System.out.println("Please enter the name of the person to send money to >>> ");
+		String toUserName = scanner.nextLine();
+		int toUserId = userService.findIdByUserName(toUserName);
+		System.out.println("How much money would you like to send " + toUserName + "?"); // how much do you want to send
+		String transferInput = scanner.nextLine();
+		double transferAmount = Double.parseDouble(transferInput); // assign entry to var. and search for id based on
+																	// that
+		Transfer result = transferService.sendBucks(fromUserId, transferAmount, toUserId);
+		if (result != null) {
 			System.out.println("Transfer successful!!");
 		} else {
 			System.out.println("Transfer failed.");

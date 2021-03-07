@@ -56,21 +56,20 @@ public class UserService {
 
 		return idUser;
 	}
-	// DWNT
+
 
 	public int findIdByUserName(String username) {
 		int theUserId = 0;
 		try {
-			theUserId = restTemplate.exchange(BASE_URL + "/user" + "?username=" + username , HttpMethod.GET, makeAuthEntity(), int.class)
-					.getBody();
+			theUserId = restTemplate
+					.exchange(BASE_URL + "/accounts/accountname/" + username, HttpMethod.GET, makeAuthEntity(), int.class).getBody();
 		} catch (RestClientResponseException ex) {
 			System.out.println("Bad Input");
 			ex.printStackTrace();
 		}
-
 		return theUserId;
 	}
-	// DWNT
+
 
 	public String findUserNameById() {
 		User theUser = null;
