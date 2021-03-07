@@ -184,7 +184,7 @@ public class App {
 				System.out.println("Transfer failed.");
 			}
 		} else {
-			System.out.println("Shiiiiiiit");
+			System.out.println("You don't have the funds");
 		}
 		
 	}

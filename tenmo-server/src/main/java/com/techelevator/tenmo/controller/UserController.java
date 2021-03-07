@@ -44,24 +44,6 @@ public class UserController {
 	}
 	
 	 // *****************
-	 // *   /REGISTER   *
-	 // *****************
-	
-	/*
-	 * Register new user account.
-	 */
-
-//	@RequestMapping(path = "/register", method = RequestMethod.POST)
-//	public void findAccountWithUserId (@RequestBody RegisterUserDTO newUser) {
-//		try { uDAO.findByUsername(newUser.getUsername());
-//			throw new UserAlreadyExistsException();
-//		} catch (UsernameNotFoundException notFoundExeption) {
-//			uDAO.create(newUser.getUsername(), newUser.getPassword());
-//		}
-//	}
-	
-
-	 // *****************
 	 // *   /USERS      *
 	 // *****************
 
@@ -107,6 +89,7 @@ public class UserController {
 	 * @Param account_id
 	 */
 	
+<<<<<<< HEAD
 	
 	
 //	@RequestMapping(path = "/accounts/{account_id}/username", method = RequestMethod.GET)
@@ -119,14 +102,18 @@ public class UserController {
 //	
 	
 	
+=======
+>>>>>>> b0c4a9be6e1bfb8d5fa9785b4047196e8ecbdab6
 	@RequestMapping(path = "/accounts/accountname/{user_name}", method = RequestMethod.GET)
 	public int findAccountWithUserName(@PathVariable String user_name) {
 		return uDAO.findIdByUsername(user_name);
 	}
 	
-	
-	
-	
+	/*
+	 * Get account balance.
+	 * 
+	 * @Param account_id
+	 */
 	@RequestMapping(path = "/accounts/{account_id}/balance", method = RequestMethod.GET)
 	public double findCurrentBalance(@PathVariable int account_id) {
 		return aDAO.getBalance(account_id);
