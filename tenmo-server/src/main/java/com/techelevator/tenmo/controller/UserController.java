@@ -44,24 +44,6 @@ public class UserController {
 	}
 	
 	 // *****************
-	 // *   /REGISTER   *
-	 // *****************
-	
-	/*
-	 * Register new user account.
-	 */
-
-//	@RequestMapping(path = "/register", method = RequestMethod.POST)
-//	public void findAccountWithUserId (@RequestBody RegisterUserDTO newUser) {
-//		try { uDAO.findByUsername(newUser.getUsername());
-//			throw new UserAlreadyExistsException();
-//		} catch (UsernameNotFoundException notFoundExeption) {
-//			uDAO.create(newUser.getUsername(), newUser.getPassword());
-//		}
-//	}
-	
-
-	 // *****************
 	 // *   /USERS      *
 	 // *****************
 
@@ -101,9 +83,6 @@ public class UserController {
 	 * 
 	 * @Param account_id
 	 */
-	
-	
-	
 	
 	@RequestMapping(path = "/accounts/accountname/{user_name}", method = RequestMethod.GET)
 	public int findAccountWithUserName(@PathVariable String user_name) {
