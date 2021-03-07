@@ -44,7 +44,6 @@ public class UserController {
 	}
 	
 	 // *****************
-<<<<<<< HEAD
 	 // *   /REGISTER   *
 	 // *****************
 	
@@ -63,8 +62,6 @@ public class UserController {
 	
 
 	 // *****************
-=======
->>>>>>> 9b4cc9cf7cac1b69331beca210a71b8c53a3e315
 	 // *   /USERS      *
 	 // *****************
 

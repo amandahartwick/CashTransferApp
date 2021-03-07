@@ -23,6 +23,7 @@ public class UserService {
 					HttpMethod.POST, makeAuthEntity(), boolean.class).getBody();
 		} catch (RestClientResponseException e) {
 			System.out.println("Bad Input");
+			e.printStackTrace();
 		}
 		return didItCreate;
 	};
@@ -37,6 +38,7 @@ public class UserService {
 			}
 		} catch (RestClientResponseException ex) {
 			System.out.println("Bad Input");
+			ex.printStackTrace();
 		}
 		return users;
 
@@ -49,6 +51,7 @@ public class UserService {
 					.getBody();
 		} catch (RestClientResponseException ex) {
 			System.out.println("Bad Input");
+			ex.printStackTrace();
 		}
 
 		return idUser;
@@ -58,12 +61,13 @@ public class UserService {
 	public int findIdByUserName(String username) {
 		int theUserId = 0;
 		try {
-			theUserId = restTemplate.exchange(BASE_URL + "/account/" + username , HttpMethod.GET, makeAuthEntity(), int.class)
+			theUserId = restTemplate.exchange(BASE_URL + "/user" + "?username=" + username , HttpMethod.GET, makeAuthEntity(), int.class)
 					.getBody();
 		} catch (RestClientResponseException ex) {
 			System.out.println("Bad Input");
 			ex.printStackTrace();
 		}
+
 		return theUserId;
 	}
 	// DWNT
@@ -75,6 +79,7 @@ public class UserService {
 					.getBody();
 		} catch (RestClientResponseException ex) {
 			System.out.println("Bad Input");
+			ex.printStackTrace();
 		}
 
 		return theUser.getUsername();

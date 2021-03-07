@@ -87,7 +87,7 @@ public class App {
 	}
 
 	private void viewCurrentBalance() {
-<<<<<<< HEAD
+
 		System.out.println("Enter your account ID");
 		Scanner scanner = new Scanner(System.in);
 		String account = scanner.nextLine();
@@ -99,27 +99,13 @@ public class App {
 		
 	}
 
-	private void viewTransferHistory() {
-//		System.out.println("Enter your account ID");
-//		Scanner scanner = new Scanner(System.in);
-//		String user = scanner.nextLine();
-//		int userId = Integer.parseInt(user);
-		List<Transfer> history = transferService.viewMyTransferHistory(currentUser.getUser().getId());
-		System.out.println(history);
-		
-		//TransferService needs instantiated?
-=======
-		int userId = currentUser.getUser().getId();
-		Account userAcct = accountService.getAccountbyUserID(userId);
-		System.out.println("Current balance: " + userAcct.getBalance());
 
-	}
 
 	private void viewTransferHistory() {
 		int userId = currentUser.getUser().getId();
 		List<Transfer> acctHistory = transferService.viewMyTransferHistory(userId);
 		System.out.println("Transfer history: " + acctHistory);
->>>>>>> 9b4cc9cf7cac1b69331beca210a71b8c53a3e315
+
 	}
 
 	private void viewPendingRequests() {
@@ -135,30 +121,12 @@ public class App {
 				System.out.println(user.getUsername() + "/t"); // want just their username
 			}	
 		Scanner scanner = new Scanner(System.in);
-<<<<<<< HEAD
 		String from = scanner.nextLine();
 		int fromId =Integer.parseInt(from);
 		String amountString = scanner.nextLine();
 		double amount = Double.parseDouble(amountString);
 		String to = scanner.nextLine();
 		int toId =Integer.parseInt(to);
-		boolean result = transferService.sendBucks(fromId, amount, toId);
-		if(result) {
-			System.out.println("Transfer Successful");
-		} else {
-			System.out.println();
-			}
-		//Should only ask for amount and receiver. Should generate from account.
-=======
-		System.out.println("Please enter the name of the person to send money to >>> ");
-		String toUserName = scanner.nextLine();
-		int toUserId = userService.findIdByUserName(toUserName);
-		
-		System.out.println("How much money would you like to send" + toUserName + "?");	// how much do you want to send
-		String transferInput = scanner.nextLine();
-		double transferAmount = Double.parseDouble(transferInput);	//assign entry to var. and search for id based on that
->>>>>>> 9b4cc9cf7cac1b69331beca210a71b8c53a3e315
-	
 		boolean result = transferService.sendBucks(fromUserId, transferAmount, toUserId);
 		if (result) {
 			System.out.println("Transfer successful!!");
