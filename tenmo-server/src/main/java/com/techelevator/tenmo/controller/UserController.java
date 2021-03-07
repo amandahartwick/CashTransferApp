@@ -87,6 +87,11 @@ public class UserController {
 		return uDAO.findIdByUsername(user_name);
 	}
 	
+	/*
+	 * Get account balance.
+	 * 
+	 * @Param account_id
+	 */
 	@RequestMapping(path = "/accounts/{account_id}/balance", method = RequestMethod.GET)
 	public double findCurrentBalance(@PathVariable int account_id) {
 		return aDAO.getBalance(account_id);
