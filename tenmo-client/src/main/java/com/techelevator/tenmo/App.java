@@ -124,7 +124,7 @@ public class App {
 		if (result) {
 			System.out.println("Transfer successful!!");
 		} else {
-			System.out.println("You're a chump!");
+			System.out.println("Transfer failed.");
 		}
 	}
 
