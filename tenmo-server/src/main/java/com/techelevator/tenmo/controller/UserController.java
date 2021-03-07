@@ -51,14 +51,14 @@ public class UserController {
 	 * Register new user account.
 	 */
 
-	@RequestMapping(path = "/register", method = RequestMethod.POST)
-	public void findAccountWithUserId (@RequestBody RegisterUserDTO newUser) {
-		try { uDAO.findByUsername(newUser.getUsername());
-			throw new UserAlreadyExistsException();
-		} catch (UsernameNotFoundException notFoundExeption) {
-			uDAO.create(newUser.getUsername(), newUser.getPassword());
-		}
-	}
+//	@RequestMapping(path = "/register", method = RequestMethod.POST)
+//	public void findAccountWithUserId (@RequestBody RegisterUserDTO newUser) {
+//		try { uDAO.findByUsername(newUser.getUsername());
+//			throw new UserAlreadyExistsException();
+//		} catch (UsernameNotFoundException notFoundExeption) {
+//			uDAO.create(newUser.getUsername(), newUser.getPassword());
+//		}
+//	}
 	
 
 	 // *****************

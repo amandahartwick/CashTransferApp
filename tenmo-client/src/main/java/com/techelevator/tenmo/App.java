@@ -83,11 +83,11 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	private void viewCurrentBalance() {
 		System.out.println("Enter your account ID");
 		Scanner scanner = new Scanner(System.in);
-		String user = scanner.nextLine();
-		int userId = Integer.parseInt(user);
-		double balance = accountService.viewCurrentBalance(userId);
+		String account = scanner.nextLine();
+		int accountId = Integer.parseInt(account);
+		double balance = accountService.viewCurrentBalance(accountId);
 		System.out.println("You have " + balance + " in your account.");
-		
+		//Don't take input on account, get their account
 		//AccountService needs instantiated?
 		
 	}
@@ -97,9 +97,8 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 //		Scanner scanner = new Scanner(System.in);
 //		String user = scanner.nextLine();
 //		int userId = Integer.parseInt(user);
-//		List<Transfer> history = transferService.viewMyTransferHistory(userId);
-//		System.out.println(history);
-		System.out.println(currentUser);
+		List<Transfer> history = transferService.viewMyTransferHistory(currentUser.getUser().getId());
+		System.out.println(history);
 		
 		//TransferService needs instantiated?
 	}
@@ -123,7 +122,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		} else {
 			System.out.println();
 			}
-		
+		//Should only ask for amount and receiver. Should generate from account.
 	
 		//TransferService needs instantiated?
 	}
