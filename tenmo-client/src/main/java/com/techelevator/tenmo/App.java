@@ -187,7 +187,7 @@ public class App {
 		if (toUserId == 0) {
 			exitProgram();
 		}
-		// Enter how much money to send
+		// Enter how much money to send.
 		System.out.println("Enter amount: ");
 		String transferInput = scanner.nextLine();
 		double transferAmount = Double.parseDouble(transferInput);
