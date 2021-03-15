@@ -12,8 +12,8 @@ public interface TransferDAO {
 	public List<Transfer> viewTransferHistory(int accountId);
 	
 	public Transfer transferDetails(int transferId);
-	
-	public boolean acceptTransfer(int transferId, int userId, boolean accepted);
 
 	public List<Transfer> viewPendingRequests(int accountId);
+
+	public boolean acceptTransfer(int transferId, int userId, int accepted);
 }

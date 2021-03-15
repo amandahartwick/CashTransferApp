@@ -21,13 +21,6 @@ public class JDBCTransferDAO implements TransferDAO {
 		this.aDAO = jdbcAccountDAO;
 	}
 
-	/*
-	 * sends money from_user to to_user and manages balances
-	 *
-	 * perhaps it would be a more simplistic approach to have a "moneyChange" method
-	 * which takes care of balance changes? ^ execute if calculations are needed
-	 * elsewhere ^
-	 */
 	@Override
 	public boolean sendBucks(int fromUserID, double request, int toUserID) {
 		// Logic
@@ -54,7 +47,6 @@ public class JDBCTransferDAO implements TransferDAO {
 
 		} else {
 			System.out.println("Insufficient Funds");
-			// throw new InsufficientFundException();
 		}
 		return success;
 	}
@@ -91,21 +83,24 @@ public class JDBCTransferDAO implements TransferDAO {
 	@Override
 	public boolean requestBucks(int me, double request, int you) {
 		boolean success = false;
-		Account mine = aDAO.getAccountByUserId(me);
-		Account yours = aDAO.getAccountByUserId(you);
-		// Transfer built
-		long transferId = getNextTransferId();
-		String sqlTransfer = "INSERT INTO transfers (transfer_id, transfer_status_id, transfer_type_id, account_from, account_to, amount)"
-				+ "VALUES (?, 1, 1, ?, ?, ?);";
-		jdbcTemplate.update(sqlTransfer, transferId, yours.getAccountId(), mine.getAccountId(), request);
-		success = true;
+		if (request > 0) {
+
+			Account mine = aDAO.getAccountByUserId(me);
+			Account yours = aDAO.getAccountByUserId(you);
+			// Transfer built
+			long transferId = getNextTransferId();
+			String sqlTransfer = "INSERT INTO transfers (transfer_id, transfer_status_id, transfer_type_id, account_from, account_to, amount)"
+					+ "VALUES (?, 1, 1, ?, ?, ?);";
+			jdbcTemplate.update(sqlTransfer, transferId, yours.getAccountId(), mine.getAccountId(), request);
+			success = true;
+		}
 		return success;
 	}
 
 	@Override
 	public List<Transfer> viewPendingRequests(int accountId) {
 		List<Transfer> pendingRequests = new ArrayList<>();
-		String sqlRetreivePendingRequests = "SELECT transfer_id, transfer_type_id, transfer_status_id account_from, account_to, amount FROM transfers WHERE transfer_status_id = 1 AND account_from = ?";
+		String sqlRetreivePendingRequests = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers WHERE transfer_status_id = 1 AND account_to = ?";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlRetreivePendingRequests, accountId);
 		while (results.next()) {
 			Transfer transferResult = mapRowToTransfer(results);
@@ -115,13 +110,10 @@ public class JDBCTransferDAO implements TransferDAO {
 	}
 
 	@Override
-	public boolean acceptTransfer(int transferId, int userId, boolean accepted) {
-		if (!accepted) {
-			String sqlTransferRejected = "UPDATE transfers SET transfer_status_id = 3 WHERE transfer_id = ?";
-			jdbcTemplate.update(sqlTransferRejected, transferId);
-			return accepted;
-		}
-		Transfer transferRequest = null;
+	public boolean acceptTransfer(int transferId, int userId, int transferStatus) {
+		boolean resolved = false;
+
+		Transfer transferRequest = new Transfer();
 		String sqlRetrieveTransfer = "SELECT * FROM transfers WHERE transfer_id = ? AND account_from = ?";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlRetrieveTransfer, transferId, userId);
 		while (results.next()) {
@@ -131,20 +123,23 @@ public class JDBCTransferDAO implements TransferDAO {
 			Account sender = aDAO.getAccountByAccountId(userId);
 			Account reciever = aDAO.getAccountByAccountId(transferRequest.getAccount_to());
 			if (sender.getBalance() >= transferRequest.getAmount() && sender != reciever
-					&& transferRequest.getAmount() > 0) {
+					&& transferRequest.getAmount() > 0 && transferStatus == 1) {
 				sender.setBalance(sender.getBalance() - transferRequest.getAmount());
 				reciever.setBalance(reciever.getBalance() + transferRequest.getAmount());
+				String sqlTransferUpdate = "UPDATE transfers SET transfer_status_id = 1 WHERE transfer_id = ?";
+				jdbcTemplate.update(sqlTransferUpdate, transferStatus);
 				String sqlUpdateSender = "UPDATE accounts SET balance = ? WHERE account_id = ?;";
 				jdbcTemplate.update(sqlUpdateSender, sender.getBalance(), sender.getAccountId());
 				String sqlUpdateReciever = "UPDATE accounts SET balance = ? WHERE account_id = ?;";
 				jdbcTemplate.update(sqlUpdateReciever, reciever.getBalance(), reciever.getAccountId());
-				String sqlTransferUpdate = "UPDATE transfers SET transfer_status_id = 1 WHERE transfer_id = ?";
-				jdbcTemplate.update(sqlTransferUpdate, transferId);
+			} else if (transferStatus == 2) {
+
+				String sqlTransferRejected = "UPDATE transfers SET transfer_status_id = 3 WHERE transfer_id = ?";
+				jdbcTemplate.update(sqlTransferRejected, transferStatus);
 
 			}
-
 		}
-		return accepted;
+		return resolved;
 	}
 
 	private Transfer mapRowToTransfer(SqlRowSet results) {

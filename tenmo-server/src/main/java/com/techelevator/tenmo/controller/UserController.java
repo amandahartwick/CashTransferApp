@@ -120,10 +120,13 @@ public class UserController {
 	}
 	
 	
-	//THIS GUY HERE
-	@RequestMapping(path = "/accounts/{account_id}/requests/{transfer_id}/{status}", method = RequestMethod.GET)
-	public List <Transfer> pendingTransfers (@PathVariable int account_id, int transfer_id, int status){
-		return tDAO.acceptTransfer(transfer_id);
+
+	@RequestMapping(path = "/accounts/{account_id}/requests/{transfer_id}/", method = RequestMethod.POST)
+	public Transfer acceptTransfers (@PathVariable int account_id, int transfer_id , int status, @RequestBody Transfer transfer){
+		tDAO.acceptTransfer(transfer_id, account_id, status);
+		return transfer;
+		
+		//This needs some sort of request body like the requestMoney method
 	}
 	
 	 // *****************
@@ -147,6 +150,14 @@ public class UserController {
 	}
 	
 
+	@ResponseStatus(HttpStatus.CREATED)
+	@RequestMapping(path = "/transfers/request", method = RequestMethod.POST)
+	public Transfer requestMoney (@RequestBody Transfer transfer) {
+		boolean tdao = false;
+		tdao = tDAO.requestBucks(transfer.getAccount_from(), transfer.getAmount(), transfer.getAccount_to());
+		return transfer;
+	}
+	
 	
 	/*
 	 * Look up transfer details.
