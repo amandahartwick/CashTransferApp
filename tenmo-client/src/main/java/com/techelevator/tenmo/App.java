@@ -56,6 +56,7 @@ public class App {
 		this.userService = userService;
 		this.transferService = transferService;
 	}
+	Scanner scanner = new Scanner(System.in);
 
 	public void run() {
 		System.out.println("*********************");
@@ -125,7 +126,6 @@ public class App {
 				System.out.println("You haven't made any transfers yet!");
 			}
 			System.out.println("\nEnter Transfer ID to see transfer details or 0 to exit");
-			Scanner scanner = new Scanner(System.in);
 			String inputAsString = scanner.nextLine();
 			int input = Integer.parseInt(inputAsString);
 			if (input > 0) {
@@ -181,7 +181,6 @@ public class App {
 				}
 
 				System.out.println("\nEnter a transfer ID to respond to or 0 to quit.");
-				Scanner scanner = new Scanner(System.in);
 				String responseString = scanner.nextLine();
 				int responseId = Integer.parseInt(responseString);
 				if (responseId == 0) {
@@ -218,7 +217,6 @@ public class App {
 		}
 		System.out.println("-------------------------------------------");
 		// Enter user to send to OR exit
-		Scanner scanner = new Scanner(System.in);
 		System.out.println("Enter ID of user you are sending to (0 to cancel): ");
 		String inputToUserId = scanner.nextLine();
 		int toUserId = Integer.parseInt(inputToUserId);
@@ -253,7 +251,6 @@ public class App {
 			}
 		}
 		System.out.println("\nEnter the ID of your sugar daddy");
-		Scanner scanner = new Scanner(System.in);
 		String user = scanner.nextLine();
 		int userId = Integer.parseInt(user);
 

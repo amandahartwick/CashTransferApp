@@ -113,7 +113,7 @@ public class JDBCTransferDAO implements TransferDAO {
 	public boolean acceptTransfer(int transferId, int userId, int transferStatus) {
 		boolean resolved = false;
 
-		Transfer transferRequest = new Transfer();
+		Transfer transferRequest = null;
 		String sqlRetrieveTransfer = "SELECT * FROM transfers WHERE transfer_id = ? AND account_from = ?";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlRetrieveTransfer, transferId, userId);
 		while (results.next()) {
