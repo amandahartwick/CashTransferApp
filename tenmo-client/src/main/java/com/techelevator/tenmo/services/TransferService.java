@@ -107,7 +107,7 @@ public class TransferService {
 		resolve.setTransfer_status_id(status);
 		
 		try {
-			resolve = restTemplate.exchange(API_TRANSFER_URL + "/accounts/" + account_id +"/requests/" + transfer_id +"/", HttpMethod.POST,
+			resolve = restTemplate.exchange(API_TRANSFER_URL + "/accounts/" + resolve.getAccount_from() +"/requests/" + resolve.getTransfer_status_id() , HttpMethod.PUT,
 					makeTransferEntity(resolve), Transfer.class).getBody();
 		} catch (RestClientResponseException ex) {
 			System.out.println("Bad Input");

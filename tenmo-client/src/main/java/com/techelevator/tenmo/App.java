@@ -169,40 +169,39 @@ public class App {
 			if (transfers.isEmpty()) {
 				System.out.println("You have no pending requests");
 				pending = false;
+				break;
 
 			} else {
 				System.out.println("ID \t FROM \t TO \t AMOUNT");
-			}
-			for (Transfer t : transfers) {
-				User sender = userService.findById(t.getAccount_from());
-				User reciever = userService.findById(t.getAccount_to());
-				System.out.println(t.getTransfer_id() + "\t" + sender.getUsername() + "\t" + reciever.getUsername()
-						+ "\t" + t.getAmount());
-			}
+				for (Transfer t : transfers) {
+					User sender = userService.findById(t.getAccount_from());
+					User reciever = userService.findById(t.getAccount_to());
+					System.out.println(t.getTransfer_id() + "\t" + sender.getUsername() + "\t" + reciever.getUsername()
+							+ "\t" + t.getAmount());
+				}
 
-			System.out.println("\nEnter an ID to respond or 0 to quit.");
-			Scanner scanner = new Scanner(System.in);
-			String responseString = scanner.nextLine();
-			int responseId = Integer.parseInt(responseString);
-			if(responseId == 0) {
-				pending = false;
-			} else if (responseId < 0) {
-				System.out.println("That is not a valid input");
-			} else {
+				System.out.println("\nEnter a transfer ID to respond to or 0 to quit.");
+				Scanner scanner = new Scanner(System.in);
+				String responseString = scanner.nextLine();
+				int responseId = Integer.parseInt(responseString);
+				if (responseId == 0) {
+					pending = false;
+					break;
+				}
 				System.out.println("Enter 1 to accept the transfer, 2 to decline, 0 to quit.");
 				String decisionString = scanner.nextLine();
 				int decision = Integer.parseInt(decisionString);
-				if(decision != 0 && decision != 1 && decision != 2) {
+				if (decision != 0 && decision != 1 && decision != 2) {
 					System.out.println("That is not a valid input");
 				}
-				if(decision == 0) {
-					pending =false;
+				if (decision == 0) {
+					pending = false;
+					break;
 				}
 				decision += 1;
-				transferService.resolve(currentUser.getUser().getId(), responseId, decision);
+				transferService.resolve(userId, responseId, decision);
 				System.out.println("Hopefully it worked");
 			}
-
 		}
 	}
 

@@ -122,20 +122,23 @@ public class JDBCTransferDAO implements TransferDAO {
 		if (transferRequest != null) {
 			Account sender = aDAO.getAccountByAccountId(userId);
 			Account reciever = aDAO.getAccountByAccountId(transferRequest.getAccount_to());
-			if (sender.getBalance() >= transferRequest.getAmount() && sender != reciever
-					&& transferRequest.getAmount() > 0 && transferStatus == 1) {
+			if (sender.getBalance() >= transferRequest.getAmount() && transferRequest.getAmount() > 0 && transferStatus == 2) // transferStatus == 1 was experimental
+				{
 				sender.setBalance(sender.getBalance() - transferRequest.getAmount());
 				reciever.setBalance(reciever.getBalance() + transferRequest.getAmount());
-				String sqlTransferUpdate = "UPDATE transfers SET transfer_status_id = 1 WHERE transfer_id = ?";
-				jdbcTemplate.update(sqlTransferUpdate, transferStatus);
+				
+				String sqlTransferUpdate = "UPDATE transfers SET transfer_status_id = 2 WHERE transfer_id = ?";
+				jdbcTemplate.update(sqlTransferUpdate, transferRequest.getTransfer_id());
+				
 				String sqlUpdateSender = "UPDATE accounts SET balance = ? WHERE account_id = ?;";
 				jdbcTemplate.update(sqlUpdateSender, sender.getBalance(), sender.getAccountId());
+				
 				String sqlUpdateReciever = "UPDATE accounts SET balance = ? WHERE account_id = ?;";
 				jdbcTemplate.update(sqlUpdateReciever, reciever.getBalance(), reciever.getAccountId());
-			} else if (transferStatus == 2) {
-
+			
+				} else if (transferStatus == 3) { // transferStatus == 2 was experimental
 				String sqlTransferRejected = "UPDATE transfers SET transfer_status_id = 3 WHERE transfer_id = ?";
-				jdbcTemplate.update(sqlTransferRejected, transferStatus);
+				jdbcTemplate.update(sqlTransferRejected, transferRequest.getTransfer_id());
 
 			}
 		}

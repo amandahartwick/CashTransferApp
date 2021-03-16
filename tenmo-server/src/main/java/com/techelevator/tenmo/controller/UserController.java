@@ -120,13 +120,12 @@ public class UserController {
 	}
 	
 	
-
-	@RequestMapping(path = "/accounts/{account_id}/requests/{transfer_id}/", method = RequestMethod.POST)
-	public Transfer acceptTransfers (@PathVariable int account_id, int transfer_id , int status, @RequestBody Transfer transfer){
-		tDAO.acceptTransfer(transfer_id, account_id, status);
+	//THIS IS WHAT WE'RE WORKING ON
+	@RequestMapping(path = "/accounts/{account_id}/requests/{transfer_id}", method = RequestMethod.PUT)
+	public Transfer acceptTransfers (@PathVariable int account_id, @PathVariable int transfer_id , @RequestBody Transfer transfer){
+		tDAO.acceptTransfer(transfer_id, account_id, transfer.getTransfer_status_id());
 		return transfer;
 		
-		//This needs some sort of request body like the requestMoney method
 	}
 	
 	 // *****************

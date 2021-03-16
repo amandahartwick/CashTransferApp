@@ -1,6 +1,5 @@
-SELECT * FROM accounts WHERE account_id = 1;
+BEGIN TRANSACTION;
 
-INSERT INTO transfers (transfer_id, transfer_status_id, transfer_type_id, account_from, account_to, amount)
-VALUES (?, 2, 2, ?, ?, ?);
+UPDATE transfers SET transfer_status_id = 2  WHERE transfer_id = 15;
 
-UPDATE accounts SET balance = ? WHERE account_id = ?;
+ROLLBACK;
