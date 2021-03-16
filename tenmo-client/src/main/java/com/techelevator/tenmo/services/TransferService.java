@@ -11,6 +11,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
+import com.techelevator.tenmo.models.Account;
 import com.techelevator.tenmo.models.Transfer;
 
 public class TransferService {
@@ -37,7 +38,7 @@ public class TransferService {
 		return transfers;
 	}
 
-	//USE CASE 6
+
 	public Transfer transferByTransferId(int transferId) {
 
 		Transfer transfers = new Transfer();
@@ -51,18 +52,22 @@ public class TransferService {
 		return transfers;
 	}
 
-	public Transfer transferDetails(int transferId) {
-		Transfer details = null;
+	
+	public List<Transfer> findPendingRequests(int account_id) {
+		List<Transfer> transfers = new ArrayList<>();
 		try {
-			details = restTemplate.exchange(API_TRANSFER_URL + "/transfers/" + transferId, HttpMethod.GET,
-					makeAuthEntity(), Transfer.class).getBody();
+			Transfer[] list = restTemplate
+					.exchange(API_TRANSFER_URL + "/accounts/" + account_id +"/requests", HttpMethod.GET, makeAuthEntity(), Transfer[].class)
+					.getBody();
+			for (Transfer u : list) {
+				transfers.add(u);
+			}
 		} catch (RestClientResponseException ex) {
-			System.out.println("Bad Input");
 			ex.printStackTrace();
-			;
 		}
-		return details;
+		return transfers;
 	}
+
 
 	public Transfer sendBucks(int user_id, double amount, int receiver_id) {
 		Transfer success = new Transfer();
@@ -79,6 +84,40 @@ public class TransferService {
 		return success;
 	}
 
+	public Transfer requestBucks(int user_id, double amount, int me) {
+		Transfer success = new Transfer();
+		success.setAccount_from(user_id);
+		success.setAccount_to(me);
+		success.setAmount(amount);
+		try {
+			success = restTemplate.exchange(API_TRANSFER_URL + "/transfers/request", HttpMethod.POST,
+					makeTransferEntity(success), Transfer.class).getBody();
+		} catch (RestClientResponseException ex) {
+			System.out.println("Bad Input");
+			ex.printStackTrace();
+		}
+		return success;
+
+	}
+	
+	public Transfer resolve(int account_id, int transfer_id, int status) {
+		Transfer resolve = new Transfer();
+		resolve.setAccount_from(account_id);
+		resolve.setTransfer_id(transfer_id);
+		resolve.setTransfer_status_id(status);
+		
+		try {
+			resolve = restTemplate.exchange(API_TRANSFER_URL + "/accounts/" + resolve.getAccount_from() +"/requests/" + resolve.getTransfer_id() , HttpMethod.PUT,
+					makeTransferEntity(resolve), Transfer.class).getBody();
+		} catch (RestClientResponseException ex) {
+			System.out.println("Bad Input");
+			ex.printStackTrace();
+		}
+		return resolve;
+
+		//Fix this
+	}
+	
 	private HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);

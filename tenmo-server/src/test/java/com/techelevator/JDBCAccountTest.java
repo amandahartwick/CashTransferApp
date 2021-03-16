@@ -43,9 +43,9 @@ public class JDBCAccountTest {
 
 	@Before
 	public void setup() {
-		String truncate = "TRUNCATE TABLE accounts CASCADE";
+		//String truncate = "TRUNCATE TABLE accounts CASCADE";
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		jdbcTemplate.update(truncate);
+		//jdbcTemplate.update(truncate);
 		dao = new JDBCAccountDAO(jdbcTemplate);
 		
 		String SqlAdd = "INSERT INTO accounts (balance, account_id, user_id)"

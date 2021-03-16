@@ -56,6 +56,7 @@ public class App {
 		this.userService = userService;
 		this.transferService = transferService;
 	}
+	Scanner scanner = new Scanner(System.in);
 
 	public void run() {
 		System.out.println("*********************");
@@ -94,8 +95,8 @@ public class App {
 		Account userAcct = accountService.getAccountbyUserID(userId);
 		double currentBalance = userAcct.getBalance();
 		System.out.println("Your current account balance is: $ " + currentBalance);
-		
-		if (currentBalance == 0 ) {
+
+		if (currentBalance == 0) {
 			System.out.println("LOL you're broke.");
 		}
 	}
@@ -125,7 +126,6 @@ public class App {
 				System.out.println("You haven't made any transfers yet!");
 			}
 			System.out.println("\nEnter Transfer ID to see transfer details or 0 to exit");
-			Scanner scanner = new Scanner(System.in);
 			String inputAsString = scanner.nextLine();
 			int input = Integer.parseInt(inputAsString);
 			if (input > 0) {
@@ -151,20 +151,57 @@ public class App {
 							+ detailedTransfer.getTransfer_id() + "\n" + "From: " + detailedTransfer.getAccount_from()
 							+ "\n" + "To: " + detailedTransfer.getAccount_to() + "\n" + "Type: " + type + "\n"
 							+ "Status: " + status + "\n");
-					
 
 				}
 			} else {
 				transferView = false;
-				
+
 			}
 
 		}
 	}
 
 	private void viewPendingRequests() {
-		// TODO Auto-generated method stub
+		boolean pending = true;
+		while (pending) {
+			int userId = currentUser.getUser().getId();
+			List<Transfer> transfers = transferService.findPendingRequests(userId);
+			if (transfers.isEmpty()) {
+				System.out.println("You have no pending requests");
+				pending = false;
+				break;
 
+			} else {
+				System.out.println("ID \t FROM \t TO \t AMOUNT");
+				for (Transfer t : transfers) {
+					User sender = userService.findById(t.getAccount_from());
+					User reciever = userService.findById(t.getAccount_to());
+					System.out.println(t.getTransfer_id() + "\t" + sender.getUsername() + "\t" + reciever.getUsername()
+							+ "\t" + t.getAmount());
+				}
+
+				System.out.println("\nEnter a transfer ID to respond to or 0 to quit.");
+				String responseString = scanner.nextLine();
+				int responseId = Integer.parseInt(responseString);
+				if (responseId == 0) {
+					pending = false;
+					break;
+				}
+				System.out.println("Enter 1 to accept the transfer, 2 to decline, 0 to quit.");
+				String decisionString = scanner.nextLine();
+				int decision = Integer.parseInt(decisionString);
+				if (decision != 0 && decision != 1 && decision != 2) {
+					System.out.println("That is not a valid input");
+				}
+				if (decision == 0) {
+					pending = false;
+					break;
+				}
+				decision += 1;
+				transferService.resolve(userId, responseId, decision);
+				System.out.println("Hopefully it worked");
+			}
+		}
 	}
 
 	private void sendBucks() {
@@ -180,21 +217,20 @@ public class App {
 		}
 		System.out.println("-------------------------------------------");
 		// Enter user to send to OR exit
-		Scanner scanner = new Scanner(System.in);
 		System.out.println("Enter ID of user you are sending to (0 to cancel): ");
 		String inputToUserId = scanner.nextLine();
 		int toUserId = Integer.parseInt(inputToUserId);
 		if (toUserId == 0) {
 			exitProgram();
 		}
-		// Enter how much money to send
+		// Enter how much money to send.
 		System.out.println("Enter amount: ");
 		String transferInput = scanner.nextLine();
 		double transferAmount = Double.parseDouble(transferInput);
 		// Execute transfer
 		int userId = currentUser.getUser().getId();
 		Account userAcct = accountService.getAccountbyUserID(userId);
-		if(userAcct.getBalance() >= transferAmount) {
+		if (userAcct.getBalance() >= transferAmount) {
 			Transfer result = transferService.sendBucks(fromUserId, transferAmount, toUserId);
 			if (result != null) {
 				System.out.println("Transfer successful!! Thank you.");
@@ -204,12 +240,25 @@ public class App {
 		} else {
 			System.out.println("Transfer failed Try again, bub.");
 		}
-		
+
 	}
 
 	private void requestBucks() {
-		// TODO Auto-generated method stub
+		List<User> users = userService.findAllUsers();
+		for (User user : users) {
+			if (user.getId() != currentUser.getUser().getId()) {
+				System.out.println(user.getId() + "\t" + user.getUsername());
+			}
+		}
+		System.out.println("\nEnter the ID of your sugar daddy");
+		String user = scanner.nextLine();
+		int userId = Integer.parseInt(user);
 
+		System.out.println("\nEnter the amount for the request");
+		String amount = scanner.nextLine();
+		int money = Integer.parseInt(amount);
+
+		Transfer result = transferService.requestBucks(userId, money, currentUser.getUser().getId());
 	}
 
 	private void exitProgram() {

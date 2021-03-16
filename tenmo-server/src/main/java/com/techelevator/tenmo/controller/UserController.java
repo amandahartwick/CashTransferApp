@@ -114,6 +114,20 @@ public class UserController {
 		return tDAO.viewTransferHistory(account_id);
 	}
 	
+	@RequestMapping(path = "/accounts/{account_id}/requests", method = RequestMethod.GET)
+	public List <Transfer> pendingTransfers (@PathVariable int account_id){
+		return tDAO.viewPendingRequests(account_id);
+	}
+	
+	
+	//THIS IS WHAT WE'RE WORKING ON
+	@RequestMapping(path = "/accounts/{account_id}/requests/{transfer_id}", method = RequestMethod.PUT)
+	public Transfer acceptTransfers (@PathVariable int account_id, @PathVariable int transfer_id , @RequestBody Transfer transfer){
+		tDAO.acceptTransfer(transfer_id, account_id, transfer.getTransfer_status_id());
+		return transfer;
+		
+	}
+	
 	 // *****************
 	 // *   /TRANSFER   *
 	 // *****************
@@ -134,6 +148,16 @@ public class UserController {
 		return transfer;
 	}
 	
+
+	@ResponseStatus(HttpStatus.CREATED)
+	@RequestMapping(path = "/transfers/request", method = RequestMethod.POST)
+	public Transfer requestMoney (@RequestBody Transfer transfer) {
+		boolean tdao = false;
+		tdao = tDAO.requestBucks(transfer.getAccount_from(), transfer.getAmount(), transfer.getAccount_to());
+		return transfer;
+	}
+	
+	
 	/*
 	 * Look up transfer details.
 	 * 
@@ -143,7 +167,6 @@ public class UserController {
 	public Transfer tansferDetails (@PathVariable int transfer_id) {
 		return tDAO.transferDetails(transfer_id);
 	}
+}
 
 
-	
-	}

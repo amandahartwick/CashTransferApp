@@ -42,7 +42,7 @@ public class UserService {
 		}
 		return users;
 
-	} // DWNT
+	} 
 
 	public User findById(int user_id) {
 		User idUser = null;

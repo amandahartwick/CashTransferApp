@@ -52,7 +52,6 @@ public class AccountService {
 
 	}
 
-	// DWNT
 	public Account getAccountbyUserID(int userId) {
 		Account account = null;
 		try {
@@ -85,23 +84,6 @@ public class AccountService {
 		return account.getBalance();
 
 	}
-	
-
-//	public String getUsername(int accountId) {
-//		String username = "";
-//		try {
-//			username = restTemplate.exchange(API_ACCOUNT_URL + "/accounts/" + accountId + "/username", HttpMethod.GET,
-//					makeAuthEntity(), String.class).getBody();
-//		} catch (RestClientResponseException ex) {
-//			System.out.println("Could not retrieve the account.");
-//			ex.printStackTrace();
-//		} catch (ResourceAccessException ex) {
-//			System.out.println("A network error occurred.");
-//			ex.printStackTrace();
-//		}
-//		return username;
-//
-//	}
 
 	private HttpEntity<Account> makeUserEntity(Account account) {
 		HttpHeaders headers = new HttpHeaders();

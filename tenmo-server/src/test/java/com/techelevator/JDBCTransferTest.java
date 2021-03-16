@@ -50,13 +50,13 @@ public class JDBCTransferTest {
 	
 	@Before
 	public void setup() {
-		String truncate = "TRUNCATE TABLE accounts CASCADE";
+		//String truncate = "TRUNCATE TABLE accounts CASCADE";
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		jdbcTemplate.update(truncate);
+		//jdbcTemplate.update(truncate);
 		aDAO = new JDBCAccountDAO(jdbcTemplate);
 		dao = new JDBCTransferDAO(jdbcTemplate, aDAO);
-		String truncatetransfer = "TRUNCATE TABLE transfers CASCADE";
-		jdbcTemplate.update(truncatetransfer);
+		//String truncatetransfer = "TRUNCATE TABLE transfers CASCADE";
+		//jdbcTemplate.update(truncatetransfer);
 		String SqlAdd = "INSERT INTO accounts (balance, account_id, user_id)"
 				+ " VALUES (?, ?, ?);";
 		jdbcTemplate.update(SqlAdd, BALANCE, TA1, TU1);
